@@ -190,6 +190,76 @@
                 font-size: 0.875rem;
             }
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 450px;
+            text-align: center;
+            position: relative;
+            animation: fadeInScale 0.3s ease-out forwards;
+            border: 1px solid #e8d7b9;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content .modal-button {
+            background-color: #b17e4f;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 0 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content .modal-button:hover {
+            background-color: #9d6b42;
+            transform: translateY(-1px);
+        }
+        .modal-content .modal-button:last-child {
+            background-color: #ef4444; /* red-500 */
+        }
+        .modal-content .modal-button:last-child:hover {
+            background-color: #dc2626; /* red-700 */
+        }
+
+        /* Hide elements initially for sequential display */
+        .hidden-initial {
+            display: none;
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8">
@@ -225,10 +295,75 @@
                 <span class="text-xl font-bold text-heritage-700" id="cartTotal">₹0</span>
             </div>
             <div class="flex justify-center mt-6">
-                <button onclick="checkout()" class="bg-heritage-600 hover:bg-heritage-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-lg hidden" id="checkoutButton">
+                <button onclick="proceedToCheckout()" class="bg-heritage-600 hover:bg-heritage-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-lg hidden" id="checkoutButton">
                     <i class="fas fa-check-circle mr-2"></i> <span id="checkoutText">Proceed to Checkout</span>
                 </button>
             </div>
+        </section>
+
+        <section class="mt-12 bg-heritage-50 p-6 rounded-xl shadow-sm border border-heritage-200 hidden-initial" id="checkoutDetailsSection">
+            <h2 class="text-2xl font-bold text-heritage-700 mb-6 text-center header-font" id="checkoutDetailsTitle">Enter Your Details</h2>
+
+            <form id="checkoutForm" class="space-y-6">
+                <div>
+                    <label for="customerName" class="block text-sm font-medium text-gray-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+                    <input type="text" id="customerName" name="customerName" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-heritage-500 focus:border-heritage-500 text-gray-800">
+                </div>
+                <div>
+                    <label for="customerPhone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (for WhatsApp) <span class="text-red-500">*</span></label>
+                    <input type="tel" id="customerPhone" name="customerPhone" required pattern="[0-9]{10}" title="Please enter a 10-digit phone number (e.g., 9876543210)" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-heritage-500 focus:border-heritage-500 text-gray-800">
+                    <p class="mt-1 text-sm text-gray-500">Please enter a 10-digit Indian mobile number.</p>
+                </div>
+                <div>
+                    <label for="customerEmail" class="block text-sm font-medium text-gray-700 mb-1">Email Address (Optional)</label>
+                    <input type="email" id="customerEmail" name="customerEmail" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-heritage-500 focus:border-heritage-500 text-gray-800">
+                </div>
+                <div>
+                    <label for="deliveryAddress" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address <span class="text-red-500">*</span></label>
+                    <textarea id="deliveryAddress" name="deliveryAddress" rows="3" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-heritage-500 focus:border-heritage-500 text-gray-800"></textarea>
+                </div>
+                <div>
+                    <label for="deliveryInstructions" class="block text-sm font-medium text-gray-700 mb-1">Delivery Instructions (Optional)</label>
+                    <textarea id="deliveryInstructions" name="deliveryInstructions" rows="2" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-heritage-500 focus:border-heritage-500 text-gray-800"></textarea>
+                </div>
+
+                <div class="border-t border-heritage-200 pt-6">
+                    <h3 class="text-lg font-semibold text-heritage-700 mb-3" id="shippingMethodTitle">Shipping Method</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <input type="radio" id="shippingStandard" name="shippingMethod" value="Standard Shipping" checked class="h-4 w-4 text-heritage-600 border-gray-300 focus:ring-heritage-500">
+                            <label for="shippingStandard" class="ml-3 block text-base font-medium text-gray-700">Standard Shipping (3-5 days) - ₹50</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="shippingExpress" name="shippingMethod" value="Express Shipping" class="h-4 w-4 text-heritage-600 border-gray-300 focus:ring-heritage-500">
+                            <label for="shippingExpress" class="ml-3 block text-base font-medium text-gray-700">Express Shipping (1-2 days) - ₹100</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-heritage-200 pt-6">
+                    <h3 class="text-lg font-semibold text-heritage-700 mb-3" id="paymentMethodTitle">Payment Method</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <input type="radio" id="paymentCod" name="paymentMethod" value="Cash on Delivery" checked class="h-4 w-4 text-heritage-600 border-gray-300 focus:ring-heritage-500">
+                            <label for="paymentCod" class="ml-3 block text-base font-medium text-gray-700">Cash on Delivery (COD)</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" id="paymentUpi" name="paymentMethod" value="UPI" class="h-4 w-4 text-heritage-600 border-gray-300 focus:ring-heritage-500">
+                            <label for="paymentUpi" class="ml-3 block text-base font-medium text-gray-700">UPI / Online Payment (Details shared on WhatsApp)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-8 space-x-4">
+                    <button type="button" onclick="confirmOrderOnWhatsApp()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-lg">
+                        <i class="fab fa-whatsapp mr-2"></i> <span id="confirmWhatsappText">Confirm Order on WhatsApp</span>
+                    </button>
+                    <button type="button" onclick="cancelCheckout()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-lg">
+                        <i class="fas fa-times-circle mr-2"></i> <span id="cancelCheckoutText">Cancel</span>
+                    </button>
+                </div>
+            </form>
         </section>
 
         <footer class="mt-12 text-center text-gray-600 text-sm">
@@ -253,6 +388,21 @@
                 totalText: "Total:",
                 checkoutText: "Proceed to Checkout",
                 addToCart: "Add to Cart",
+                checkoutDetailsTitle: "Enter Your Details",
+                shippingMethodTitle: "Shipping Method",
+                paymentMethodTitle: "Payment Method",
+                confirmWhatsappText: "Confirm Order on WhatsApp",
+                cancelCheckoutText: "Cancel",
+                orderConfirmationHeader: "Order Confirmation:",
+                customerDetailsHeader: "Customer Details:",
+                shippingDetailsHeader: "Shipping Details:",
+                paymentMethodText: "Payment Method:",
+                deliveryInstructionsText: "Delivery Instructions:",
+                orderSummaryHeader: "Order Summary:",
+                totalAmountText: "Total Amount (incl. Shipping):",
+                thankYouMessage: "Thank you for your order! We'll process it shortly.",
+                productNotFound: "Product not found.",
+                invalidInput: "Please fill in all required fields (Name, Phone, Address) correctly.",
                 products: [
                     { name: "Peanut Chutney (Garlic)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Chutney" },
                     { name: "Peanut Chutney (Fasting)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Fasting+Chutney", isNew: true },
@@ -266,7 +416,7 @@
                     { name: "Dink Laddu (Nutmeg & Cardamom)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Dink+Laddu", isNew: true },
                     { name: "Peanut Laddu (Cardamom)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Laddu" },
                     { name: "Besan Laddu (Cardamom)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Besan+Laddu" },
-                    { name: "Thalipeeth Bhajani (Mixed Grains Flour)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Thalipeeth+Bhajani" },
+                    { name: "Thalipeeth Bhajani (Mixed Grains Flour)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मishrit anaj ka aata)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Thalipeeth+Bhajani" },
                     { name: "Chakali Bhajani", marathi: "चकली भाजणी", hindi: "चकली भाजनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Chakali+Bhajani" }
                 ]
             },
@@ -280,6 +430,21 @@
                 totalText: "कुल:",
                 checkoutText: "चेकआउट के लिए आगे बढ़ें",
                 addToCart: "कार्ट में जोड़ें",
+                checkoutDetailsTitle: "अपने विवरण दर्ज करें",
+                shippingMethodTitle: "शिपिंग विधि",
+                paymentMethodTitle: "भुगतान विधि",
+                confirmWhatsappText: "व्हाट्सएप पर ऑर्डर की पुष्टि करें",
+                cancelCheckoutText: "रद्द करें",
+                orderConfirmationHeader: "ऑर्डर की पुष्टि:",
+                customerDetailsHeader: "ग्राहक विवरण:",
+                shippingDetailsHeader: "शिपिंग विवरण:",
+                paymentMethodText: "भुगतान विधि:",
+                deliveryInstructionsText: "डिलीवरी निर्देश:",
+                orderSummaryHeader: "ऑर्डर सारांश:",
+                totalAmountText: "कुल राशि (शिपिंग सहित):",
+                thankYouMessage: "आपके आदेश के लिए धन्यवाद! हम जल्द ही इसे संसाधित करेंगे।",
+                productNotFound: "उत्पाद नहीं मिला।",
+                invalidInput: "कृपया सभी आवश्यक फ़ील्ड (नाम, फ़ोन, पता) सही ढंग से भरें।",
                 products: [
                     { name: "मूंगफली की चटनी (लहसुन)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Chutney" },
                     { name: "मूंगफली की चटनी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Fasting+Chutney", isNew: true },
@@ -307,6 +472,21 @@
                 totalText: "एकूण:",
                 checkoutText: "चेकआउटसाठी पुढे जा",
                 addToCart: "कार्टमध्ये जोडा",
+                checkoutDetailsTitle: "तुमचे तपशील प्रविष्ट करा",
+                shippingMethodTitle: "शिपिंग पद्धत",
+                paymentMethodTitle: "पेमेंट पद्धत",
+                confirmWhatsappText: "WhatsApp वर ऑर्डरची पुष्टी करा",
+                cancelCheckoutText: "रद्द करा",
+                orderConfirmationHeader: "ऑर्डरची पुष्टी:",
+                customerDetailsHeader: "ग्राहक तपशील:",
+                shippingDetailsHeader: "शिपिंग तपशील:",
+                paymentMethodText: "पेमेंट पद्धत:",
+                deliveryInstructionsText: "वितरण सूचना:",
+                orderSummaryHeader: "ऑर्डर सारांश:",
+                totalAmountText: "एकूण रक्कम (शिपिंगसह):",
+                thankYouMessage: "तुमच्या ऑर्डरबद्दल धन्यवाद! आम्ही लवकरच त्यावर प्रक्रिया करू.",
+                productNotFound: "उत्पादन सापडले नाही.",
+                invalidInput: "कृपया सर्व आवश्यक फील्ड (नाव, फोन, पत्ता) योग्यरित्या भरा.",
                 products: [
                     { name: "शेंगदाणा चटणी (लसूण)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=शेंगदाणा+चटणी" },
                     { name: "शेंगदाणा चटणी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=शेंगदाणा+चटणी", isNew: true },
@@ -346,6 +526,9 @@
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
 
+        // WhatsApp business number (replace with your actual number)
+        const whatsappNumber = '919326208190'; // Example: +91 8080808080
+
         // Function to update content based on selected language
         function updateContent(lang) {
             const currentTranslation = translations[lang];
@@ -357,6 +540,11 @@
             document.getElementById('emptyCartMessage').textContent = currentTranslation.emptyCartMessage;
             document.getElementById('totalText').textContent = currentTranslation.totalText;
             document.getElementById('checkoutText').textContent = currentTranslation.checkoutText;
+            document.getElementById('checkoutDetailsTitle').textContent = currentTranslation.checkoutDetailsTitle;
+            document.getElementById('shippingMethodTitle').textContent = currentTranslation.shippingMethodTitle;
+            document.getElementById('paymentMethodTitle').textContent = currentTranslation.paymentMethodTitle;
+            document.getElementById('confirmWhatsappText').textContent = currentTranslation.confirmWhatsappText;
+            document.getElementById('cancelCheckoutText').textContent = currentTranslation.cancelCheckoutText;
 
 
             const productGrid = document.getElementById('productGrid');
@@ -402,7 +590,7 @@
             updateCartDisplay(); // Refresh cart display with new language
         }
 
-        // --- Cart Functionality (Simplified) ---
+        // --- Cart Functionality ---
         function openProductModal(productIndex) {
             const product = translations[currentLanguage].products[productIndex];
             const prices = productPrices[productIndex];
@@ -434,7 +622,7 @@
                         <button class="modal-button" onclick="addToCart(${productIndex})">
                             <i class="fas fa-plus mr-2"></i> Add to Cart
                         </button>
-                        <button class="modal-button" onclick="closeModal()">
+                        <button class="modal-button bg-red-500 hover:bg-red-700" onclick="closeModal()">
                             <i class="fas fa-times mr-2"></i> Cancel
                         </button>
                     </div>
@@ -456,7 +644,7 @@
             const selectedQuantityElement = document.getElementById('productQuantity');
 
             if (!selectedWeightElement || !selectedQuantityElement) {
-                alert('Error: Could not find product options.');
+                alert(translations[currentLanguage].productNotFound);
                 return;
             }
 
@@ -468,7 +656,7 @@
             const item = {
                 id: `${productIndex}-${selectedWeight}`,
                 name: productDetails.name,
-                marathiName: productDetails.marathi, // Store all names for language switching
+                marathiName: productDetails.marathi,
                 hindiName: productDetails.hindi,
                 weight: selectedWeight,
                 pricePerUnit: selectedPrice,
@@ -509,7 +697,7 @@
                 cartSummary.classList.remove('hidden');
                 checkoutButton.classList.remove('hidden');
 
-                cart.forEach((item, index) => {
+                cart.forEach((item) => {
                     let itemNameDisplay = item.name;
                     if (currentLanguage === 'hi') {
                         itemNameDisplay = item.hindiName;
@@ -541,18 +729,101 @@
             updateCartDisplay();
         }
 
-        function checkout() {
+        // --- Checkout Process ---
+        function proceedToCheckout() {
             if (cart.length === 0) {
                 alert(translations[currentLanguage].emptyCartMessage);
                 return;
             }
-            // In a real application, you would direct to a checkout page or initiate an order process
-            alert(
-                `Thank you for your order!\nTotal: ₹${cart.reduce((sum, item) => sum + item.total, 0)}\n\n(This is a placeholder checkout. For a real order, we'd integrate a payment gateway and order fulfillment system.)`
-            );
-            cart = []; // Clear cart after "checkout"
+            // Hide product grid and cart, show checkout form
+            document.getElementById('productGrid').classList.add('hidden-initial');
+            document.getElementById('cartSection').classList.add('hidden-initial');
+            document.getElementById('checkoutDetailsSection').classList.remove('hidden-initial');
+            // Scroll to the top of the checkout form
+            document.getElementById('checkoutDetailsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelCheckout() {
+            // Show product grid and cart, hide checkout form
+            document.getElementById('productGrid').classList.remove('hidden-initial');
+            document.getElementById('cartSection').classList.remove('hidden-initial');
+            document.getElementById('checkoutDetailsSection').classList.add('hidden-initial');
+            // Scroll back to the top of the page or product list
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function confirmOrderOnWhatsApp() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+            const deliveryInstructions = document.getElementById('deliveryInstructions').value.trim();
+            const shippingMethod = document.querySelector('input[name="shippingMethod"]:checked').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            // Basic validation
+            if (!customerName || !customerPhone || !deliveryAddress) {
+                alert(translations[currentLanguage].invalidInput);
+                return;
+            }
+
+            // Phone number validation (10 digits)
+            const phonePattern = /^\d{10}$/;
+            if (!phonePattern.test(customerPhone)) {
+                alert(translations[currentLanguage].invalidInput); // Re-use message for simplicity
+                return;
+            }
+
+
+            let orderDetails = `${translations[currentLanguage].orderConfirmationHeader}\n\n`;
+
+            // Customer Details
+            orderDetails += `${translations[currentLanguage].customerDetailsHeader}\n`;
+            orderDetails += `Name: ${customerName}\n`;
+            orderDetails += `Phone: ${customerPhone}\n`;
+            if (customerEmail) orderDetails += `Email: ${customerEmail}\n`;
+            orderDetails += `\n`;
+
+            // Shipping Details
+            orderDetails += `${translations[currentLanguage].shippingDetailsHeader}\n`;
+            orderDetails += `Address: ${deliveryAddress}\n`;
+            if (deliveryInstructions) orderDetails += `${translations[currentLanguage].deliveryInstructionsText} ${deliveryInstructions}\n`;
+            orderDetails += `Shipping: ${shippingMethod}\n`;
+            orderDetails += `\n`;
+
+            // Order Summary
+            orderDetails += `${translations[currentLanguage].orderSummaryHeader}\n`;
+            cart.forEach((item, index) => {
+                let itemNameDisplay = item.name;
+                if (currentLanguage === 'hi') {
+                    itemNameDisplay = item.hindiName;
+                } else if (currentLanguage === 'mr') {
+                    itemNameDisplay = item.marathiName;
+                }
+                orderDetails += `${index + 1}. ${itemNameDisplay} (${item.weight}) x ${item.quantity} = ₹${item.total}\n`;
+            });
+            orderDetails += `\n`;
+
+            let totalOrderAmount = cart.reduce((sum, item) => sum + item.total, 0);
+            let shippingCost = (shippingMethod === 'Standard Shipping') ? 50 : 100;
+            totalOrderAmount += shippingCost; // Add shipping cost to total
+
+            orderDetails += `${translations[currentLanguage].totalAmountText} ₹${totalOrderAmount}\n`;
+            orderDetails += `${translations[currentLanguage].paymentMethodText} ${paymentMethod}\n`;
+
+            // Encode message for URL
+            const encodedMessage = encodeURIComponent(orderDetails);
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+
+            // Redirect to WhatsApp
+            window.open(whatsappUrl, '_blank');
+
+            // Clear cart and show success message (optional, as user is redirected)
+            alert(translations[currentLanguage].thankYouMessage);
+            cart = [];
             localStorage.removeItem('cart');
             updateCartDisplay();
+            cancelCheckout(); // Go back to product list view
         }
 
 
