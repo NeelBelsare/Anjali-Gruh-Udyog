@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kalindi - Anjali Gruh Udyog offers traditional homemade food products with 60 years of heritage. Explore our range of chutneys, laddus, and spice mixes.">
+    <title id="pageTitle">Kalindi - Anjali Gruh Udyog: Products & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'heritage': {
+                            '50': '#faf6f0',
+                            '100': '#f4ecdd',
+                            '200': '#e8d7b9',
+                            '300': '#dabb8b',
+                            '400': '#cb9759',
+                            '500': '#b17e4f', // Primary brand color
+                            '600': '#9d6b42',
+                            '700': '#7f5437',
+                            '800': '#684530',
+                            '900': '#573b2a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'display': ['"Playfair Display"', 'serif']
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'hard': '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf6f0; /* Light heritage background */
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .header-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b17e4f;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9d6b42;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideUp 0.4s forwards ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-button {
+            background-color: #b17e4f;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .modal-button:hover {
+            background-color: #9d6b42;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .modal-button:active {
+            transform: translateY(0);
+        }
+
+        /* Price table styles */
+        .price-cell {
+            font-weight: 600;
+            color: #7f5437;
+        }
+
+        /* Hover effects */
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        /* Floating action buttons */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #b17e4f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            background-color: #9d6b42;
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .fab:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .order-button-fixed {
+            position: fixed;
+            top: 2rem; /* Adjusted from 2rem in mobile version to allow space for logo on small screens */
+            right: 2rem;
+            z-index: 90; /* Lower than FAB but still above content */
+            background-color: #cb9759; /* Different shade of heritage color */
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .order-button-fixed:hover {
+            background-color: #b17e4f; /* Darker on hover */
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .order-button-fixed:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .modal-button {
+                padding: 0.6rem 1rem;
+                min-width: 100px;
+            }
+
+            .fab {
+                width: 50px;
+                height: 50px;
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .order-button-fixed {
+                top: 1.5rem; /* Slightly smaller top margin for mobile */
+                right: 1.5rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.875rem; /* text-sm */
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
+
+    <div id="languageModal" class="modal">
+        <div class="modal-content">
+            <div class="mb-6">
+                <i class="fas fa-language text-4xl text-heritage-500 mb-3"></i>
+                <h2 class="text-2xl font-bold text-heritage-700" id="selectLanguageText">Please select your preferred language:</h2>
+            </div>
+            <div class="flex flex-wrap justify-center">
+                <button class="modal-button flex items-center justify-center" onclick="setLanguage('en')">
+                    <i class="fas fa-globe-americas mr-2"></i> English
+                </button>
+                <button class="modal-button flex items-center justify-center" onclick="setLanguage('hi')">
+                    <i class="fas fa-globe-asia mr-2"></i> हिंदी
+                </button>
+                <button class="modal-button flex items-center justify-center" onclick="setLanguage('mr')">
+                    <i class="fas fa-globe-asia mr-2"></i> मराठी
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fab hover-scale" onclick="scrollToContact()">
+        <i class="fas fa-phone-alt text-xl"></i>
+    </div>
+
+    <a href="order.html" class="order-button-fixed hover-scale" id="orderNowButton">
+    <i class="fas fa-shopping-cart mr-2"></i> Order Now
+</a>
+
+    <div class="w-full max-w-6xl bg-white rounded-xl shadow-soft p-6 sm:p-8 md:p-10 lg:p-12 border border-heritage-200 hover-scale transition-all duration-300">
+
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center">
+                <img src="https://via.placeholder.com/40" alt="Kalindi Logo" class="h-10 w-10 rounded-full mr-3 border border-heritage-300">
+                <span class="text-sm font-medium text-heritage-700 hidden sm:block">Kalindi - Anjali Gruh Udyog</span>
+            </div>
+            <div class="inline-flex rounded-md shadow-sm" role="group">
+                <button type="button" onclick="setLanguage('en')" class="language-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-50 focus:z-10 focus:ring-2 focus:ring-heritage-500 focus:text-heritage-700 transition-colors">
+                    <i class="fas fa-globe-americas mr-1"></i> EN
+                </button>
+                <button type="button" onclick="setLanguage('hi')" class="language-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-50 focus:z-10 focus:ring-2 focus:ring-heritage-500 focus:text-heritage-700 transition-colors">
+                    <i class="fas fa-globe-asia mr-1"></i> HI
+                </button>
+                <button type="button" onclick="setLanguage('mr')" class="language-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-50 focus:z-10 focus:ring-2 focus:ring-heritage-500 focus:text-heritage-700 transition-colors">
+                    <i class="fas fa-globe-asia mr-1"></i> MR
+                </button>
+            </div>
+        </div>
+
+        <header class="text-center mb-10">
+            <div class="mb-4">
+                <span class="text-2xl sm:text-3xl font-semibold text-heritage-600 header-font" id="kalindiTitle">॥ कालंदी ॥</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-heritage-800 mb-3 header-font" id="anjaliGruhUdyogTitle">
+                Anjali Gruh Udyog
+            </h1>
+            <div class="flex items-center justify-center">
+                <div class="h-px bg-heritage-300 flex-1"></div>
+                <div class="mx-4">
+                    <i class="fas fa-leaf text-heritage-500 text-xl"></i>
+                </div>
+                <div class="h-px bg-heritage-300 flex-1"></div>
+            </div>
+            <p class="text-lg sm:text-xl text-gray-700 mt-4">
+                <span id="traditionMarathi" class="text-heritage-700">"60 वर्षांची रुचकर परंपरा"</span>
+                <span class="text-base sm:text-lg text-gray-500 italic block mt-1" id="traditionEnglish">(60 Years of Delicious Tradition)</span>
+            </p>
+        </header>
+
+        <section class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-heritage-700 text-center mb-8 pb-2 border-b-2 border-heritage-200 header-font" id="productsPricingTitle">
+                Our Products & Pricing
+            </h2>
+
+            <div class="relative overflow-x-auto rounded-xl shadow-sm border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200 bg-white">
+                    <thead class="bg-heritage-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-heritage-700 uppercase tracking-wider" id="sNoHeader">
+                                S.No.
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-heritage-700 uppercase tracking-wider" id="productNameHeader">
+                                Product Name
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-heritage-700 uppercase tracking-wider">
+                                50 gm
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-heritage-700 uppercase tracking-wider">
+                                100 gm
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-heritage-700 uppercase tracking-wider">
+                                250 gm
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-heritage-700 uppercase tracking-wider">
+                                500 gm
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-center text-xs font-medium text-heritage-700 uppercase tracking-wider">
+                                1 Kg
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200" id="productTableBody">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="mt-8 p-4 bg-heritage-50 rounded-lg shadow-sm border border-heritage-200">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 mt-1">
+                        <i class="fas fa-info-circle text-heritage-500 text-lg"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-semibold text-heritage-800" id="noteTitle">Note:</span>
+                            <span id="customOrderNote">वरील सर्व प्रकारचे पदार्थ व लोणचे ऑर्डर प्रमाणे तयार करून मिळेल.</span>
+                        </p>
+                        <p class="text-xs italic text-gray-600 mt-1" id="customOrderNoteEnglish">
+                            (All types of the above-mentioned items and pickles will be prepared as per order.)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contactSection" class="mt-12 bg-gradient-to-br from-heritage-50 to-heritage-100 p-8 rounded-xl shadow-sm border border-heritage-200">
+            <h2 class="text-2xl font-bold text-heritage-700 mb-6 text-center header-font" id="contactUsTitle">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-heritage-200">
+                    <h3 class="text-lg font-semibold text-heritage-800 mb-4 flex items-center">
+                        <i class="fas fa-shopping-basket mr-2 text-heritage-500"></i>
+                        <span id="ordersInquiriesText">For Orders & Inquiries:</span>
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-heritage-500 mr-3"></i>
+                            <a href="tel:+919604002702" class="text-lg font-medium text-heritage-700 hover:text-heritage-600 hover:underline transition-colors">
+                                +91 9604002702
+                            </a>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-heritage-500 mr-3"></i>
+                            <a href="tel:+918669114920" class="text-lg font-medium text-heritage-700 hover:text-heritage-600 hover:underline transition-colors">
+                                +91 8669114920
+                            </a>
+                        </div>
+                        <div class="flex items-center mt-4">
+                            <i class="fas fa-clock text-heritage-500 mr-3"></i>
+                            <span class="text-gray-700">9:00 AM - 7:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-heritage-200">
+                    <h3 class="text-lg font-semibold text-heritage-800 mb-4 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-heritage-500"></i>
+                        <span>Our Location</span>
+                    </h3>
+                    <div>
+                        <p class="text-gray-700">
+                            <span id="anjaliAddressLine1">Anjali Gruh Udyog,</span><br>
+                            <span id="anjaliAddressLine2">14, जय विश्वभारती कॉलनी, छत्रपती संभाजीनगर</span>
+                        </p>
+                        <p class="text-sm text-gray-500 italic mt-1" id="anjaliAddressEnglish">
+                            (14, Jai Vishwabharti Colony, Chhatrapati Sambhaji Nagar)
+                        </p>
+                    </div>
+                    <div class="mt-4">
+                        <button onclick="openMap()" class="inline-flex items-center px-4 py-2 border border-heritage-300 rounded-md shadow-sm text-sm font-medium text-heritage-700 bg-white hover:bg-heritage-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-heritage-500 transition-colors">
+                            <i class="fas fa-map-marked-alt mr-2 text-heritage-500"></i>
+                            <span>View on Map</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-gray-600 text-sm">
+            <p class="mb-2">
+                © <span id="currentYear"></span> Kalindi - Anjali Gruh Udyog. All rights reserved.
+            </p>
+            <p class="text-gray-500">
+                Made with <i class="fas fa-heart text-red-400"></i> in Chhatrapati Sambhaji Nagar
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Enhanced translations with more context
+        const translations = {
+            en: {
+                pageTitle: "Kalindi - Anjali Gruh Udyog: Products & Pricing",
+                kalindiTitle: "॥ Kalindi ॥",
+                anjaliGruhUdyogTitle: "Anjali Gruh Udyog",
+                traditionMarathi: '"60 Years of Delicious Tradition"',
+                traditionEnglish: "", // Not needed for English as it's the main text
+                productsPricingTitle: "Our Products & Pricing",
+                sNoHeader: "S.No.",
+                productNameHeader: "Product Name",
+                customOrderNote: "All types of the above-mentioned items and pickles will be prepared as per order.",
+                customOrderNoteEnglish: "", // Not needed for English
+                noteTitle: "Note:",
+                contactUsTitle: "Contact Us",
+                ordersInquiriesText: "For Orders & Inquiries:",
+                anjaliAddressLine1: "Anjali Gruh Udyog,",
+                anjaliAddressLine2: "14, Jai Vishwabharti Colony, Chhatrapati Sambhaji Nagar",
+                anjaliAddressEnglish: "", // Not needed for English
+                selectLanguageText: "Please select your preferred language:",
+                orderNowButton: "Order Now",
+                products: [
+                    { name: "Peanut Chutney (Garlic)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)" },
+                    { name: "Peanut Chutney (Fasting)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)" },
+                    { name: "Flaxseed Chutney (Garlic)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)" },
+                    { name: "Niger Seed Chutney (Garlic)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)" },
+                    { name: "Coconut Chutney (Garlic)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)" },
+                    { name: "Pud Chutney", marathi: "पुड चटणी", hindi: "पुड चटनी" },
+                    { name: "Sesame Chutney", marathi: "तीळ चटणी", hindi: "तिल की चटनी" },
+                    { name: "Digestive Areca Nut", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी" },
+                    { name: "Metkut (Spice Powder Mix)", marathi: "मेथकुट", hindi: "मेथकुट" },
+                    { name: "Dink Laddu (Nutmeg & Cardamom)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)" },
+                    { name: "Peanut Laddu (Cardamom)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)" },
+                    { name: "Besan Laddu (Cardamom)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)" },
+                    { name: "Thalipeeth Bhajani (Mixed Grains Flour)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)" },
+                    { name: "Chakali Bhajani", marathi: "चकली भाजणी", hindi: "चकली भाजni" }
+                ]
+            },
+            hi: {
+                pageTitle: "कालिंदी - अंजली गृह उद्योग: उत्पाद और मूल्य",
+                kalindiTitle: "॥ कालंदी ॥",
+                anjaliGruhUdyogTitle: "अंजली गृह उद्योग",
+                traditionMarathi: '"60 वर्षों की स्वादिष्ट परंपरा"',
+                traditionEnglish: "",
+                productsPricingTitle: "हमारे उत्पाद और मूल्य निर्धारण",
+                sNoHeader: "क्र.सं.",
+                productNameHeader: "उत्पाद का नाम",
+                customOrderNote: "उपरोक्त सभी प्रकार के पदार्थ और अचार ऑर्डर के अनुसार तैयार किए जाएंगे।",
+                customOrderNoteEnglish: "",
+                noteTitle: "नोट:",
+                contactUsTitle: "हमसे संपर्क करें",
+                ordersInquiriesText: "ऑर्डर और पूछताछ के लिए:",
+                anjaliAddressLine1: "अंजली गृह उद्योग,",
+                anjaliAddressLine2: "14, जय विश्वभारती कॉलनी, छत्रपती संभाजीनगर",
+                anjaliAddressEnglish: "",
+                selectLanguageText: "कृपया अपनी पसंदीदा भाषा चुनें:",
+                orderNowButton: "अभी ऑर्डर करें",
+                products: [
+                    { name: "मूंगफली की चटनी (लहसुन)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)" },
+                    { name: "मूंगफली की चटनी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)" },
+                    { name: "अलसी की चटनी (लहसुन)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)" },
+                    { name: "करला चटनी (लहसुन)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)" },
+                    { name: "नारियल की चटनी (लहसुन)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)" },
+                    { name: "पुड चटनी", marathi: "पुड चटणी", hindi: "पुड चटनी" },
+                    { name: "तिल की चटनी", marathi: "तीळ चटणी", hindi: "तिल की चटनी" },
+                    { name: "पाचक सुपारी", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी" },
+                    { name: "मेथकुट", marathi: "मेथकुट", hindi: "मेथकुट" },
+                    { name: "गोंद के लड्डू (जायफल और इलायची)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)" },
+                    { name: "मूंगफली के लड्डू (इलायची)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)" },
+                    { name: "बेसन के लड्डू (इलायची)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)" },
+                    { name: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)" },
+                    { name: "चकली भाजनी", marathi: "चकली भाजणी", hindi: "चकली भाजनी" }
+                ]
+            },
+            mr: {
+                pageTitle: "कालंदी - अंजली गृह उद्योग: उत्पादने आणि किंमत",
+                kalindiTitle: "॥ कालंदी ॥",
+                anjaliGruhUdyogTitle: "अंजली गृह उद्योग",
+                traditionMarathi: '"60 वर्षांची रुचकर परंपरा"',
+                traditionEnglish: "",
+                productsPricingTitle: "आमची उत्पादने आणि किंमत",
+                sNoHeader: "अ.क्र.",
+                productNameHeader: "उत्पादनाचे नाव",
+                customOrderNote: "वरील सर्व प्रकारचे पदार्थ व लोणचे ऑर्डर प्रमाणे तयार करून मिळेल.",
+                customOrderNoteEnglish: "",
+                noteTitle: "टीप:",
+                contactUsTitle: "आमच्याशी संपर्क साधा",
+                ordersInquiriesText: "ऑर्डर आणि चौकशीसाठी:",
+                anjaliAddressLine1: "अंजली गृह उद्योग,",
+                anjaliAddressLine2: "14, जय विश्वभारती कॉलनी, छत्रपती संभाजीनगर",
+                anjaliAddressEnglish: "",
+                selectLanguageText: "कृपया तुमची पसंतची भाषा निवडा:",
+                orderNowButton: "आता ऑर्डर करा",
+                products: [
+                    { name: "शेंगदाणा चटणी (लसूण)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)" },
+                    { name: "शेंगदाणा चटणी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)" },
+                    { name: "जवस चटणी (लसूण)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)" },
+                    { name: "कारळा चटणी (लसूण)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)" },
+                    { name: "खोबरं चटणी (लसूण)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)" },
+                    { name: "पुड चटणी", marathi: "पुड चटणी", hindi: "पुड चटनी" },
+                    { name: "तीळ चटणी", marathi: "तीळ चटणी", hindi: "तिल की चटनी" },
+                    { name: "पाचक सुपारी", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी" },
+                    { name: "मेथकुट", marathi: "मेथकुट", hindi: "मेथकुट" },
+                    { name: "डिंक लाडू (जायफळ वेलदोची)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)" },
+                    { name: "शेंगदाणा लाडू (वेलदोची)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)" },
+                    { name: "बेसन लाडू (वेलदोची)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)" },
+                    { name: "थालीपीठ भाजणी (मिक्स धान्य)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)" },
+                    { name: "चकली भाजणी", marathi: "चकली भाजणी", hindi: "चकली भाजनी" }
+                ]
+            }
+        };
+
+        const productPrices = [
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 30, '100gm': 60, '250gm': 150, '500gm': 300, '1Kg': 600 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': '-', '100gm': '-', '250gm': 250, '500gm': 500, '1Kg': 1000 },
+            { '50gm': '-', '100gm': '-', '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': '-', '100gm': '-', '250gm': 150, '500gm': 300, '1Kg': 600 },
+            { '50gm': '-', '100gm': '-', '250gm': 80, '500gm': 160, '1Kg': 320 },
+            { '50gm': '-', '100gm': '-', '250gm': 80, '500gm': 160, '1Kg': 320 }
+        ];
+
+        // Function to update content based on selected language
+        function updateContent(lang) {
+            const currentTranslation = translations[lang];
+
+            // Update static text elements
+            document.getElementById('pageTitle').textContent = currentTranslation.pageTitle;
+            document.getElementById('kalindiTitle').textContent = currentTranslation.kalindiTitle;
+            document.getElementById('anjaliGruhUdyogTitle').textContent = currentTranslation.anjaliGruhUdyogTitle;
+            document.getElementById('traditionMarathi').textContent = currentTranslation.traditionMarathi;
+            // Only update traditionEnglish if it's not empty in the translation (i.e., for non-English languages)
+            document.getElementById('traditionEnglish').textContent = currentTranslation.traditionEnglish === "" ? (lang === 'en' ? "(60 Years of Delicious Tradition)" : "") : currentTranslation.traditionEnglish;
+
+            document.getElementById('productsPricingTitle').textContent = currentTranslation.productsPricingTitle;
+            document.getElementById('sNoHeader').textContent = currentTranslation.sNoHeader;
+            document.getElementById('productNameHeader').textContent = currentTranslation.productNameHeader;
+            document.getElementById('noteTitle').textContent = currentTranslation.noteTitle;
+            document.getElementById('customOrderNote').textContent = currentTranslation.customOrderNote;
+            document.getElementById('customOrderNoteEnglish').textContent = currentTranslation.customOrderNoteEnglish === "" ? (lang === 'en' ? "(All types of the above-mentioned items and pickles will be prepared as per order.)" : "") : currentTranslation.customOrderNoteEnglish;
+            document.getElementById('contactUsTitle').textContent = currentTranslation.contactUsTitle;
+            document.getElementById('ordersInquiriesText').textContent = currentTranslation.ordersInquiriesText;
+            document.getElementById('anjaliAddressLine1').textContent = currentTranslation.anjaliAddressLine1;
+            document.getElementById('anjaliAddressLine2').textContent = currentTranslation.anjaliAddressLine2;
+            document.getElementById('anjaliAddressEnglish').textContent = currentTranslation.anjaliAddressEnglish === "" ? (lang === 'en' ? "(14, Jai Vishwabharti Colony, Chhatrapati Sambhaji Nagar)" : "") : currentTranslation.anjaliAddressEnglish;
+            document.getElementById('selectLanguageText').textContent = currentTranslation.selectLanguageText;
+
+            // Update "Order Now" button text
+            document.getElementById('orderNowButton').innerHTML = `<i class="fas fa-shopping-cart mr-2"></i> ${currentTranslation.orderNowButton}`;
+
+
+            // Populate product table
+            const productTableBody = document.getElementById('productTableBody');
+            productTableBody.innerHTML = ''; // Clear existing rows
+
+            currentTranslation.products.forEach((product, index) => {
+                const row = document.createElement('tr');
+                row.classList.add('hover:bg-gray-50');
+                const prices = productPrices[index];
+
+                let productNameDisplay = product.name;
+                if (lang === 'hi') {
+                    productNameDisplay = product.hindi;
+                } else if (lang === 'mr') {
+                    productNameDisplay = product.marathi;
+                }
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-800 font-medium">${productNameDisplay}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm price-cell">${prices['50gm']}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm price-cell">${prices['100gm']}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm price-cell">${prices['250gm']}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm price-cell">${prices['500gm']}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center text-sm price-cell">${prices['1Kg']}</td>
+                `;
+                productTableBody.appendChild(row);
+            });
+
+            // Update active language button styling
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('bg-heritage-500', 'text-white', 'hover:bg-heritage-600', 'border-heritage-500');
+                btn.classList.add('bg-white', 'text-gray-900', 'border-gray-200', 'hover:bg-gray-50');
+            });
+            const activeBtn = document.querySelector(`.language-btn[onclick="setLanguage('${lang}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-gray-900', 'border-gray-200', 'hover:bg-gray-50');
+                activeBtn.classList.add('bg-heritage-500', 'text-white', 'hover:bg-heritage-600', 'border-heritage-500');
+            }
+        }
+
+        // Function to set language and store in local storage
+        function setLanguage(lang) {
+            localStorage.setItem('selectedLanguage', lang);
+            updateContent(lang);
+            document.getElementById('languageModal').style.display = 'none';
+        }
+
+        // On page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLanguage = localStorage.getItem('selectedLanguage');
+            if (savedLanguage) {
+                updateContent(savedLanguage);
+                document.getElementById('languageModal').style.display = 'none';
+            } else {
+                // Show language modal if no language is saved
+                document.getElementById('languageModal').style.display = 'flex';
+            }
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        });
+
+        // Scroll to contact section
+        function scrollToContact() {
+            document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Open map link
+        function openMap() {
+            const address = "14, Jai Vishwabharti Colony, Chhatrapati Sambhaji Nagar";
+            // Using Google Maps search query for better compatibility
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+            window.open(mapUrl, '_blank');
+        }
+
+        // Set default language to English when the page loads for the very first time if nothing is saved
+        if (!localStorage.getItem('selectedLanguage')) {
+            setLanguage('en');
+        }
+    </script>
+</body>
+</html>

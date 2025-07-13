@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Order homemade food products from Kalindi - Anjali Gruh Udyog. Browse our delicious chutneys, laddus, and spice mixes.">
+    <title id="pageTitle">Order Now - Kalindi Anjali Gruh Udyog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'heritage': {
+                            '50': '#faf6f0',
+                            '100': '#f4ecdd',
+                            '200': '#e8d7b9',
+                            '300': '#dabb8b',
+                            '400': '#cb9759',
+                            '500': '#b17e4f', // Primary brand color
+                            '600': '#9d6b42',
+                            '700': '#7f5437',
+                            '800': '#684530',
+                            '900': '#573b2a',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'display': ['"Playfair Display"', 'serif']
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.08)',
+                        'hard': '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf6f0; /* Light heritage background */
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .header-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #b17e4f;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9d6b42;
+        }
+
+        /* Product Card Styles */
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e8d7b9;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative; /* For the "New" badge */
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for consistency */
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-info {
+            padding: 1rem;
+            flex-grow: 1; /* Allows info to take available space */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600;
+            color: #684530; /* heritage-800 */
+            margin-bottom: 0.5rem;
+            min-height: 2.5em; /* Ensure consistent height for names */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limit to 2 lines */
+            line-clamp: 2; /* Standard property for compatibility */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-price {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700;
+            color: #b17e4f; /* heritage-500 */
+            margin-bottom: 0.75rem;
+        }
+
+        .product-price span {
+            font-size: 0.875rem; /* text-sm */
+            color: #7f5437; /* heritage-700 */
+        }
+
+        .add-to-cart-btn {
+            background-color: #b17e4f;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* Full width within card */
+            margin-top: auto; /* Push to the bottom */
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #9d6b42;
+            transform: translateY(-1px);
+        }
+
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px; /* full rounded */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 700;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; /* Adjust gap for responsiveness */
+        }
+
+        @media (max-width: 640px) { /* Small screens (sm) */
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Smaller cards on mobile */
+                gap: 1rem;
+            }
+            .product-card img {
+                height: 150px;
+            }
+            .product-name {
+                font-size: 1rem;
+            }
+            .product-price {
+                font-size: 1.125rem;
+            }
+            .add-to-cart-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8">
+
+    <div class="w-full max-w-7xl bg-white rounded-xl shadow-soft p-6 sm:p-8 md:p-10 lg:p-12 border border-heritage-200">
+
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-heritage-800 mb-3 header-font" id="orderPageTitle">
+                Our Delicious Products
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-700 mt-4" id="orderPageSubtitle">
+                Handcrafted with tradition and quality.
+            </p>
+            <div class="flex justify-center mt-6">
+                <a href="index.html" class="inline-flex items-center px-4 py-2 border border-heritage-300 rounded-md shadow-sm text-sm font-medium text-heritage-700 bg-white hover:bg-heritage-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-heritage-500 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> <span id="backToHome">Back to Home</span>
+                </a>
+            </div>
+        </header>
+
+        <section class="mb-12">
+            <div class="product-grid" id="productGrid">
+                </div>
+        </section>
+
+        <section class="mt-12 bg-heritage-50 p-6 rounded-xl shadow-sm border border-heritage-200" id="cartSection">
+            <h2 class="text-2xl font-bold text-heritage-700 mb-4 text-center header-font" id="yourCartTitle">Your Cart</h2>
+            <div id="cartItems" class="space-y-3">
+                <p class="text-gray-600 text-center" id="emptyCartMessage">Your cart is empty.</p>
+                </div>
+            <div id="cartSummary" class="mt-6 pt-4 border-t border-heritage-200 flex justify-between items-center hidden">
+                <span class="text-lg font-semibold text-heritage-800" id="totalText">Total:</span>
+                <span class="text-xl font-bold text-heritage-700" id="cartTotal">₹0</span>
+            </div>
+            <div class="flex justify-center mt-6">
+                <button onclick="checkout()" class="bg-heritage-600 hover:bg-heritage-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out text-lg hidden" id="checkoutButton">
+                    <i class="fas fa-check-circle mr-2"></i> <span id="checkoutText">Proceed to Checkout</span>
+                </button>
+            </div>
+        </section>
+
+        <footer class="mt-12 text-center text-gray-600 text-sm">
+            <p class="mb-2">
+                © <span id="currentYear"></span> Kalindi - Anjali Gruh Udyog. All rights reserved.
+            </p>
+            <p class="text-gray-500">
+                Made with <i class="fas fa-heart text-red-400"></i> in Chhatrapati Sambhaji Nagar
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                pageTitle: "Order Now - Kalindi Anjali Gruh Udyog",
+                orderPageTitle: "Our Delicious Products",
+                orderPageSubtitle: "Handcrafted with tradition and quality.",
+                backToHome: "Back to Home",
+                yourCartTitle: "Your Cart",
+                emptyCartMessage: "Your cart is empty.",
+                totalText: "Total:",
+                checkoutText: "Proceed to Checkout",
+                addToCart: "Add to Cart",
+                products: [
+                    { name: "Peanut Chutney (Garlic)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Chutney" },
+                    { name: "Peanut Chutney (Fasting)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Fasting+Chutney", isNew: true },
+                    { name: "Flaxseed Chutney (Garlic)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Flaxseed+Chutney" },
+                    { name: "Niger Seed Chutney (Garlic)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Niger+Chutney" },
+                    { name: "Coconut Chutney (Garlic)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Coconut+Chutney" },
+                    { name: "Pud Chutney", marathi: "पुड चटणी", hindi: "पुड चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Pud+Chutney" },
+                    { name: "Sesame Chutney", marathi: "तीळ चटणी", hindi: "तिल की चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Sesame+Chutney", isNew: true },
+                    { name: "Digestive Areca Nut", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Areca+Nut" },
+                    { name: "Metkut (Spice Powder Mix)", marathi: "मेथकुट", hindi: "मेथकुट", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Metkut" },
+                    { name: "Dink Laddu (Nutmeg & Cardamom)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Dink+Laddu", isNew: true },
+                    { name: "Peanut Laddu (Cardamom)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Laddu" },
+                    { name: "Besan Laddu (Cardamom)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Besan+Laddu" },
+                    { name: "Thalipeeth Bhajani (Mixed Grains Flour)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Thalipeeth+Bhajani" },
+                    { name: "Chakali Bhajani", marathi: "चकली भाजणी", hindi: "चकली भाजनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Chakali+Bhajani" }
+                ]
+            },
+            hi: {
+                pageTitle: "अभी ऑर्डर करें - कालिंदी अंजली गृह उद्योग",
+                orderPageTitle: "हमारे स्वादिष्ट उत्पाद",
+                orderPageSubtitle: "परंपरा और गुणवत्ता के साथ हस्तनिर्मित।",
+                backToHome: "मुख्य पृष्ठ पर वापस",
+                yourCartTitle: "आपका कार्ट",
+                emptyCartMessage: "आपका कार्ट खाली है।",
+                totalText: "कुल:",
+                checkoutText: "चेकआउट के लिए आगे बढ़ें",
+                addToCart: "कार्ट में जोड़ें",
+                products: [
+                    { name: "मूंगफली की चटनी (लहसुन)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Chutney" },
+                    { name: "मूंगफली की चटनी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Fasting+Chutney", isNew: true },
+                    { name: "अलसी की चटनी (लहसुन)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Flaxseed+Chutney" },
+                    { name: "करला चटनी (लहसुन)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Niger+Chutney" },
+                    { name: "नारियल की चटनी (लहसुन)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Coconut+Chutney" },
+                    { name: "पुड चटनी", marathi: "पुड चटणी", hindi: "पुड चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Pud+Chutney" },
+                    { name: "तिल की चटनी", marathi: "तीळ चटणी", hindi: "तिल की चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Sesame+Chutney", isNew: true },
+                    { name: "पाचक सुपारी", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Areca+Nut" },
+                    { name: "मेथकुट", marathi: "मेथकुट", hindi: "मेथकुट", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Metkut" },
+                    { name: "गोंद के लड्डू (जायफल और इलायची)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Dink+Laddu", isNew: true },
+                    { name: "मूंगफली के लड्डू (इलायची)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Peanut+Laddu" },
+                    { name: "बेसन के लड्डू (इलायची)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Besan+Laddu" },
+                    { name: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Thalipeeth+Bhajani" },
+                    { name: "चकली भाजनी", marathi: "चकली भाजणी", hindi: "चकली भाजनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=Chakali+Bhajani" }
+                ]
+            },
+            mr: {
+                pageTitle: "आता ऑर्डर करा - कालंदी अंजली गृह उद्योग",
+                orderPageTitle: "आमची स्वादिष्ट उत्पादने",
+                orderPageSubtitle: "परंपरा आणि गुणवत्तेने बनवलेली.",
+                backToHome: "मुख्यपृष्ठावर परत",
+                yourCartTitle: "तुमची कार्ट",
+                emptyCartMessage: "तुमची कार्ट रिकामी आहे.",
+                totalText: "एकूण:",
+                checkoutText: "चेकआउटसाठी पुढे जा",
+                addToCart: "कार्टमध्ये जोडा",
+                products: [
+                    { name: "शेंगदाणा चटणी (लसूण)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=शेंगदाणा+चटणी" },
+                    { name: "शेंगदाणा चटणी (उपवास)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=शेंगदाणा+चटणी", isNew: true },
+                    { name: "जवस चटणी (लसूण)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=जवस+चटणी" },
+                    { name: "कारळा चटणी (लसूण)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=कारळा+चटणी" },
+                    { name: "खोबरं चटणी (लसूण)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=खोबरं+चटणी" },
+                    { name: "पुड चटणी", marathi: "पुड चटणी", hindi: "पुड चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=पुड+चटणी" },
+                    { name: "तीळ चटणी", marathi: "तीळ चटणी", hindi: "तिल की चटनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=तीळ+चटणी", isNew: true },
+                    { name: "पाचक सुपारी", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=पाचक+सुपारी" },
+                    { name: "मेथकुट", marathi: "मेथकुट", hindi: "मेथकुट", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=मेथकुट" },
+                    { name: "डिंक लाडू (जायफळ वेलदोची)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=डिंक+लाडू", isNew: true },
+                    { name: "शेंगदाणा लाडू (वेलदोची)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=शेंगदाणा+लाडू" },
+                    { name: "बेसन लाडू (वेलदोची)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=बेसन+लाडू" },
+                    { name: "थालीपीठ भाजणी (मिक्स धान्य)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=थालीपीठ+भाजणी" },
+                    { name: "चकली भाजणी", marathi: "चकली भाजणी", hindi: "चकली भाजनी", img: "https://via.placeholder.com/300x180/F0F0F0/000000?text=चकली+भाजणी" }
+                ]
+            }
+        };
+
+        const productPrices = [
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': 30, '100gm': 60, '250gm': 150, '500gm': 300, '1Kg': 600 },
+            { '50gm': 25, '100gm': 50, '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': '-', '100gm': '-', '250gm': 250, '500gm': 500, '1Kg': 1000 },
+            { '50gm': '-', '100gm': '-', '250gm': 100, '500gm': 200, '1Kg': 400 },
+            { '50gm': '-', '100gm': '-', '250gm': 150, '500gm': 300, '1Kg': 600 },
+            { '50gm': '-', '100gm': '-', '250gm': 80, '500gm': 160, '1Kg': 320 },
+            { '50gm': '-', '100gm': '-', '250gm': 80, '500gm': 160, '1Kg': 320 }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+        // Function to update content based on selected language
+        function updateContent(lang) {
+            const currentTranslation = translations[lang];
+            document.getElementById('pageTitle').textContent = currentTranslation.pageTitle;
+            document.getElementById('orderPageTitle').textContent = currentTranslation.orderPageTitle;
+            document.getElementById('orderPageSubtitle').textContent = currentTranslation.orderPageSubtitle;
+            document.getElementById('backToHome').textContent = currentTranslation.backToHome;
+            document.getElementById('yourCartTitle').textContent = currentTranslation.yourCartTitle;
+            document.getElementById('emptyCartMessage').textContent = currentTranslation.emptyCartMessage;
+            document.getElementById('totalText').textContent = currentTranslation.totalText;
+            document.getElementById('checkoutText').textContent = currentTranslation.checkoutText;
+
+
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = ''; // Clear existing products
+
+            currentTranslation.products.forEach((product, index) => {
+                const prices = productPrices[index];
+                // Display the lowest available price, or a range if multiple are available
+                const availablePrices = Object.values(prices).filter(p => p !== '-');
+                let displayPrice = '';
+                if (availablePrices.length > 0) {
+                    displayPrice = `₹${Math.min(...availablePrices)}`;
+                    if (availablePrices.length > 1) {
+                        displayPrice += ` - ₹${Math.max(...availablePrices)}`;
+                    }
+                } else {
+                    displayPrice = 'N/A'; // No price available
+                }
+
+
+                let productNameDisplay = product.name;
+                if (lang === 'hi') {
+                    productNameDisplay = product.hindi;
+                } else if (lang === 'mr') {
+                    productNameDisplay = product.marathi;
+                }
+
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.img}" alt="${productNameDisplay}" class="object-cover rounded-t-lg">
+                    ${product.isNew ? '<span class="new-badge">New</span>' : ''}
+                    <div class="product-info">
+                        <h3 class="product-name">${productNameDisplay}</h3>
+                        <p class="product-price">${displayPrice} <span>(from 50gm)</span></p>
+                        <button class="add-to-cart-btn" onclick="openProductModal(${index})">
+                            <i class="fas fa-cart-plus mr-2"></i> ${currentTranslation.addToCart}
+                        </button>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+            updateCartDisplay(); // Refresh cart display with new language
+        }
+
+        // --- Cart Functionality (Simplified) ---
+        function openProductModal(productIndex) {
+            const product = translations[currentLanguage].products[productIndex];
+            const prices = productPrices[productIndex];
+
+            let optionsHtml = '';
+            for (const weight in prices) {
+                if (prices[weight] !== '-') {
+                    optionsHtml += `
+                        <option value="${weight}" data-price="${prices[weight]}">
+                            ${weight} - ₹${prices[weight]}
+                        </option>
+                    `;
+                }
+            }
+
+            const modalContent = `
+                <div class="modal-content">
+                    <h3 class="text-2xl font-bold text-heritage-700 mb-4">${product.name}</h3>
+                    <img src="${product.img}" alt="${product.name}" class="w-48 h-auto mx-auto mb-4 rounded-lg">
+                    <p class="text-gray-700 mb-4">Select Quantity/Weight:</p>
+                    <select id="productWeight" class="w-full p-3 mb-4 border border-gray-300 rounded-md text-gray-700 focus:ring-heritage-500 focus:border-heritage-500">
+                        ${optionsHtml}
+                    </select>
+                    <div class="flex items-center justify-center mb-6">
+                        <label for="quantity" class="mr-3 font-semibold text-gray-700">Quantity:</label>
+                        <input type="number" id="productQuantity" value="1" min="1" class="w-20 p-2 border border-gray-300 rounded-md text-center focus:ring-heritage-500 focus:border-heritage-500">
+                    </div>
+                    <div class="flex justify-center">
+                        <button class="modal-button" onclick="addToCart(${productIndex})">
+                            <i class="fas fa-plus mr-2"></i> Add to Cart
+                        </button>
+                        <button class="modal-button" onclick="closeModal()">
+                            <i class="fas fa-times mr-2"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', `<div id="productModal" class="modal">${modalContent}</div>`);
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('productModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function addToCart(productIndex) {
+            const selectedWeightElement = document.getElementById('productWeight');
+            const selectedQuantityElement = document.getElementById('productQuantity');
+
+            if (!selectedWeightElement || !selectedQuantityElement) {
+                alert('Error: Could not find product options.');
+                return;
+            }
+
+            const selectedWeight = selectedWeightElement.value;
+            const selectedPrice = parseFloat(selectedWeightElement.options[selectedWeightElement.selectedIndex].dataset.price);
+            const quantity = parseInt(selectedQuantityElement.value);
+
+            const productDetails = translations[currentLanguage].products[productIndex];
+            const item = {
+                id: `${productIndex}-${selectedWeight}`,
+                name: productDetails.name,
+                marathiName: productDetails.marathi, // Store all names for language switching
+                hindiName: productDetails.hindi,
+                weight: selectedWeight,
+                pricePerUnit: selectedPrice,
+                quantity: quantity,
+                total: selectedPrice * quantity
+            };
+
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += quantity;
+                cart[existingItemIndex].total += item.total;
+            } else {
+                cart.push(item);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            closeModal();
+            alert(`Added ${quantity} x ${productDetails.name} (${selectedWeight}) to cart!`);
+        }
+
+        function updateCartDisplay() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const cartSummary = document.getElementById('cartSummary');
+            const cartTotalElement = document.getElementById('cartTotal');
+            const checkoutButton = document.getElementById('checkoutButton');
+
+            cartItemsContainer.innerHTML = '';
+            let totalCartPrice = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartSummary.classList.add('hidden');
+                checkoutButton.classList.add('hidden');
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                cartSummary.classList.remove('hidden');
+                checkoutButton.classList.remove('hidden');
+
+                cart.forEach((item, index) => {
+                    let itemNameDisplay = item.name;
+                    if (currentLanguage === 'hi') {
+                        itemNameDisplay = item.hindiName;
+                    } else if (currentLanguage === 'mr') {
+                        itemNameDisplay = item.marathiName;
+                    }
+
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.classList.add('flex', 'justify-between', 'items-center', 'p-2', 'bg-white', 'rounded-md', 'shadow-sm', 'border', 'border-gray-100');
+                    cartItemDiv.innerHTML = `
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-800">${itemNameDisplay} (${item.weight})</p>
+                            <p class="text-sm text-gray-600">${item.quantity} x ₹${item.pricePerUnit} = ₹${item.total}</p>
+                        </div>
+                        <button onclick="removeFromCart('${item.id}')" class="ml-4 text-red-500 hover:text-red-700 transition-colors">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    `;
+                    cartItemsContainer.appendChild(cartItemDiv);
+                    totalCartPrice += item.total;
+                });
+            }
+            cartTotalElement.textContent = `₹${totalCartPrice}`;
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(item => item.id !== itemId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert(translations[currentLanguage].emptyCartMessage);
+                return;
+            }
+            // In a real application, you would direct to a checkout page or initiate an order process
+            alert(
+                `Thank you for your order!\nTotal: ₹${cart.reduce((sum, item) => sum + item.total, 0)}\n\n(This is a placeholder checkout. For a real order, we'd integrate a payment gateway and order fulfillment system.)`
+            );
+            cart = []; // Clear cart after "checkout"
+            localStorage.removeItem('cart');
+            updateCartDisplay();
+        }
+
+
+        // On page load
+        document.addEventListener('DOMContentLoaded', () => {
+            currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+            updateContent(currentLanguage);
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
