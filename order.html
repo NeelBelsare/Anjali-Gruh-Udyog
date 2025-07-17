@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Order homemade food products from Kalindi - Anjali Gruh Udyog. Browse our delicious chutneys, laddus, and spice mixes.">
-    <title id="pageTitle">Order Now - Kalindi Anjali Gruh Udyog</title>
+    <meta name="description" content="Order homemade food products from Kalindi - Anjali Gruh Udyog. Select products, quantities, and confirm your order.">
+    <title id="pageTitle">Kalindi - Anjali Gruh Udyog: Place Your Order</title>
+    
+    <link rel="preload" href="https://cdn.tailwindcss.com" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -17,7 +22,7 @@
                             '200': '#e8d7b9',
                             '300': '#dabb8b',
                             '400': '#cb9759',
-                            '500': '#b17e4f', // Primary brand color
+                            '500': '#b17e4f',
                             '600': '#9d6b42',
                             '700': '#7f5437',
                             '800': '#684530',
@@ -28,653 +33,558 @@
                         'sans': ['Inter', 'sans-serif'],
                         'display': ['"Playfair Display"', 'serif']
                     },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideInUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        }
-                    },
-                    animation: {
-                        fadeIn: 'fadeIn 0.5s ease-out forwards',
-                        slideInUp: 'slideInUp 0.5s ease-out forwards',
+                    screens: {
+                        'xs': '375px',
+                        '3xl': '1920px'
                     }
                 }
             }
         }
     </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #faf6f0;
             color: #333;
+            min-height: 100vh;
         }
-        .text-display {
-            font-family: '"Playfair Display"', serif;
+        
+        .header-font {
+            font-family: 'Playfair Display', serif;
         }
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
         }
-        /* Hide scrollbar for IE, Edge and Firefox */
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+
+        .modal.active {
+            display: flex; /* Show when active */
         }
-        #languageModal.active {
-            opacity: 1;
-            visibility: visible;
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%; /* Could be responsive */
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-modal-content {
+            max-height: 80vh; /* Limit height for scrollable content */
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <header class="bg-heritage-700 text-white p-4 shadow-md">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-display font-bold" id="brandName">Kalindi - Anjali Gruh Udyog</h1>
-            <nav>
-                <button onclick="window.location.href='index.html'" class="bg-heritage-500 hover:bg-heritage-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out" id="backToHomeBtn">Back to Home</button>
-                <button onclick="showCart()" class="bg-heritage-500 hover:bg-heritage-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out ml-2" id="viewCartBtn">View Cart (<span id="cartItemCount">0</span>)</button>
-            </nav>
-        </div>
-    </header>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8">
 
-    <main class="container mx-auto p-4 flex-grow">
-        <section id="productListSection" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
-            </section>
+    <div class="w-full max-w-4xl bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8 lg:p-10 border border-heritage-200">
 
-        <section id="cartSection" class="hidden bg-white p-6 rounded-lg shadow-lg animate-fadeIn">
-            <h2 class="text-3xl font-display font-bold text-center mb-6" id="cartTitle">Your Cart</h2>
-            <div id="cartItems" class="space-y-4">
+        <header class="text-center mb-8 sm:mb-10">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-heritage-800 mb-3 header-font" id="mainHeading">
+                Kalindi - Anjali Gruh Udyog
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-700" id="subHeading">
+                Authentic Homemade Products with 60 Years of Heritage
+            </p>
+            <div class="mt-4 flex justify-center space-x-4">
+                <button onclick="setLanguage('en')" class="px-4 py-2 rounded-md bg-heritage-100 text-heritage-700 hover:bg-heritage-200 transition duration-200">English</button>
+                <button onclick="setLanguage('hi')" class="px-4 py-2 rounded-md bg-heritage-100 text-heritage-700 hover:bg-heritage-200 transition duration-200">हिन्दी</button>
+                <button onclick="setLanguage('mr')" class="px-4 py-2 rounded-md bg-heritage-100 text-heritage-700 hover:bg-heritage-200 transition duration-200">मराठी</button>
+            </div>
+        </header>
+
+        <nav class="mb-8 sm:mb-10 flex flex-wrap justify-center gap-3">
+            <button onclick="filterProducts('all')" class="px-5 py-2 rounded-full bg-heritage-600 text-white text-sm font-semibold hover:bg-heritage-700 transition duration-200" id="filterAll">All Products</button>
+            <button onclick="filterProducts('chutneys')" class="px-5 py-2 rounded-full bg-heritage-100 text-heritage-700 text-sm font-semibold hover:bg-heritage-200 transition duration-200" id="filterChutneys">Chutneys</button>
+            <button onclick="filterProducts('laddus')" class="px-5 py-2 rounded-full bg-heritage-100 text-heritage-700 text-sm font-semibold hover:bg-heritage-200 transition duration-200" id="filterLaddus">Laddus</button>
+            <button onclick="filterProducts('mixes')" class="px-5 py-2 rounded-full bg-heritage-100 text-heritage-700 text-sm font-semibold hover:bg-heritage-200 transition duration-200" id="filterMixes">Mixes</button>
+            <button onclick="filterProducts('other')" class="px-5 py-2 rounded-full bg-heritage-100 text-heritage-700 text-sm font-semibold hover:bg-heritage-200 transition duration-200" id="filterOther">Other</button>
+        </nav>
+
+        <section class="mb-10">
+            <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 </div>
-            <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-200">
-                <p class="text-xl font-bold" id="totalAmountText">Total: ₹<span id="totalAmount">0</span></p>
-                <div>
-                    <button onclick="cancelCheckout()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out mr-2" id="continueShoppingBtn">Continue Shopping</button>
-                    <button onclick="showCheckout()" class="bg-heritage-600 hover:bg-heritage-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out" id="proceedToCheckoutBtn">Proceed to Checkout</button>
-                </div>
+        </section>
+
+        <section class="flex flex-col sm:flex-row justify-between items-center bg-heritage-50 p-4 rounded-lg shadow-inner border border-heritage-100 sticky bottom-4">
+            <p class="text-lg font-bold text-heritage-800 mb-3 sm:mb-0" id="cartTotalText">Total: ₹<span id="cartTotalPrice">0</span></p>
+            <div class="flex space-x-3">
+                <button onclick="showCartModal()" class="px-5 py-2 bg-heritage-400 text-white rounded-lg font-semibold hover:bg-heritage-500 transition duration-200" id="viewCartButton">View Cart (<span id="cartItemCount">0</span>)</button>
+                <button onclick="proceedToCheckout()" class="px-5 py-2 bg-heritage-600 text-white rounded-lg font-semibold hover:bg-heritage-700 transition duration-200" id="checkoutButton">Proceed to Checkout</button>
             </div>
         </section>
 
-        <section id="checkoutSection" class="hidden bg-white p-6 rounded-lg shadow-lg animate-fadeIn">
-            <h2 class="text-3xl font-display font-bold text-center mb-6" id="checkoutTitle">Checkout Details</h2>
-            <form id="checkoutForm" class="space-y-4">
-                <div>
-                    <label for="fullName" class="block text-gray-700 text-sm font-bold mb-2" id="fullNameLabel">Full Name:</label>
-                    <input type="text" id="fullName" name="fullName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div>
-                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2" id="phoneLabel">WhatsApp Phone Number:</label>
-                    <input type="tel" id="phone" name="phone" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required pattern="[0-9]{10,15}" title="Please enter a valid phone number (10-15 digits)">
-                </div>
-                <div>
-                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2" id="emailLabel">Email (Optional):</label>
-                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                </div>
-                <div>
-                    <label for="address" class="block text-gray-700 text-sm font-bold mb-2" id="addressLabel">Delivery Address:</label>
-                    <textarea id="address" name="address" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
-                </div>
-                <div>
-                    <label for="deliveryInstructions" class="block text-gray-700 text-sm font-bold mb-2" id="deliveryInstructionsLabel">Delivery Instructions (Optional):</label>
-                    <textarea id="deliveryInstructions" name="deliveryInstructions" rows="2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
-                </div>
-
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" id="shippingMethodLabel">Shipping Method:</label>
-                    <div>
-                        <input type="radio" id="standardShipping" name="shipping" value="Standard Shipping (3-5 days)" data-cost="50" class="mr-2" checked>
-                        <label for="standardShipping" id="standardShippingText">Standard Shipping (3-5 days) - ₹50</label>
+        <div id="cartModal" class="modal">
+            <div class="modal-content cart-modal-content">
+                <span class="close-button" onclick="hideCartModal()">&times;</span>
+                <h2 class="text-2xl font-bold text-heritage-800 mb-4 header-font" id="cartModalTitle">Your Cart</h2>
+                <div id="cartItems" class="mb-4 text-left">
                     </div>
-                    <div>
-                        <input type="radio" id="expressShipping" name="shipping" value="Express Shipping (1-2 days)" data-cost="100" class="mr-2">
-                        <label for="expressShipping" id="expressShippingText">Express Shipping (1-2 days) - ₹100</label>
-                    </div>
+                <div class="flex justify-between items-center border-t border-heritage-200 pt-4">
+                    <p class="text-lg font-bold text-heritage-800" id="cartModalTotalText">Total: ₹<span id="cartModalTotalPrice">0</span></p>
+                    <button onclick="clearCart()" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition duration-200" id="clearCartButton">Clear Cart</button>
                 </div>
+                <button onclick="proceedToCheckout()" class="mt-4 w-full py-3 bg-heritage-600 text-white rounded-lg font-semibold hover:bg-heritage-700 transition duration-200" id="checkoutModalButton">Proceed to Checkout</button>
+            </div>
+        </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" id="paymentMethodLabel">Payment Method:</label>
-                    <div>
-                        <input type="radio" id="cod" name="payment" value="Cash on Delivery" class="mr-2" checked>
-                        <label for="cod" id="codText">Cash on Delivery (COD)</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="onlinePayment" name="payment" value="UPI / Online Payment" class="mr-2">
-                        <label for="onlinePayment" id="onlinePaymentText">UPI / Online Payment</label>
-                    </div>
-                </div>
-
-                <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-                    <button type="button" onclick="showCart()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out" id="backToCartBtn">Back to Cart</button>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out" id="confirmOrderBtn">Confirm Order on WhatsApp</button>
-                </div>
-            </form>
-        </section>
-    </main>
-
-    <footer class="bg-heritage-800 text-white p-4 text-center mt-8">
-        <p>&copy; <span id="currentYear"></span> Kalindi - Anjali Gruh Udyog. All rights reserved.</p>
-    </footer>
+        <footer class="mt-10 sm:mt-12 text-center text-gray-600 text-sm">
+            <p class="mb-2">
+                © <span id="currentYear"></span> Kalindi - Anjali Gruh Udyog. All rights reserved.
+            </p>
+            <p class="text-gray-500">
+                Made with <i class="fas fa-heart text-red-400"></i> in Chhatrapati Sambhaji Nagar
+            </p>
+        </footer>
+    </div>
 
     <script>
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let translations = {};
-        let currentLanguage = 'en';
-
-        // Translations object (expanded for more products and details)
-        const allTranslations = {
+        const translations = {
             en: {
-                brandName: "Kalindi - Anjali Gruh Udyog",
-                pageTitle: "Order Now - Kalindi Anjali Gruh Udyog",
-                backToHomeBtn: "Back to Home",
-                viewCartBtn: "View Cart",
-                cartTitle: "Your Cart",
-                totalAmountText: "Total:",
-                continueShoppingBtn: "Continue Shopping",
-                proceedToCheckoutBtn: "Proceed to Checkout",
-                checkoutTitle: "Checkout Details",
-                fullNameLabel: "Full Name:",
-                phoneLabel: "WhatsApp Phone Number:",
-                emailLabel: "Email (Optional):",
-                addressLabel: "Delivery Address:",
-                deliveryInstructionsLabel: "Delivery Instructions (Optional):",
-                shippingMethodLabel: "Shipping Method:",
-                standardShippingText: "Standard Shipping (3-5 days) - ₹50",
-                expressShippingText: "Express Shipping (1-2 days) - ₹100",
-                paymentMethodLabel: "Payment Method:",
-                codText: "Cash on Delivery (COD)",
-                onlinePaymentText: "UPI / Online Payment",
-                backToCartBtn: "Back to Cart",
-                confirmOrderBtn: "Confirm Order on WhatsApp",
-                removeBtn: "Remove",
-                emptyCartMessage: "Your cart is empty.",
-                quantityLabel: "Qty:",
-                whatsappOrderSubject: "New Order from Website",
-                thankYouMessage: "Thank you for your order! We will contact you shortly.",
+                mainHeading: "Kalindi - Anjali Gruh Udyog",
+                subHeading: "Authentic Homemade Products with 60 Years of Heritage",
+                filterAll: "All Products",
+                filterChutneys: "Chutneys",
+                filterLaddus: "Laddus",
+                filterMixes: "Mixes",
+                filterOther: "Other",
+                add: "Add",
+                cartTotalText: "Total:",
+                viewCartButton: "View Cart",
+                checkoutButton: "Proceed to Checkout",
+                cartModalTitle: "Your Cart",
+                clearCartButton: "Clear Cart",
+                cartModalTotalText: "Total:",
+                checkoutModalButton: "Proceed to Checkout",
+                rupeeSymbol: "₹",
+                gram: "gm",
+                kilogram: "Kg",
+                cartEmpty: "Your cart is empty. Please add items before proceeding to checkout.",
+                languageNotSet: "Language preference not found. Please select a language.",
                 productNotFound: "Product not found.",
-                products: [
-                    {
-                        id: 1,
-                        name: "Kothambir Wadi (New)",
-                        description: "Authentic Maharashtrian snack, crispy and flavorful.",
-                        image: "http://googleusercontent.com/img/kothambir-wadi.jpg",
-                        price: 150, // Per piece or 250gm pack, define clearly
-                        unit: "250gm",
-                        isNew: true
-                    },
-                    {
-                        id: 2,
-                        name: "Tilgul Ladoo",
-                        description: "Traditional sesame and jaggery ladoo, perfect for festive occasions.",
-                        image: "http://googleusercontent.com/img/tilgul-ladoo.jpg",
-                        price: 200,
-                        unit: "250gm",
-                        isNew: false
-                    },
-                    {
-                        id: 3,
-                        name: "Besan Ladoo",
-                        description: "Melt-in-mouth gram flour sweets.",
-                        image: "http://googleusercontent.com/img/besan-ladoo.jpg",
-                        price: 220,
-                        unit: "250gm",
-                        isNew: false
-                    },
-                    {
-                        id: 4,
-                        name: "Chivda",
-                        description: "Spicy and crunchy snack mix.",
-                        image: "http://googleusercontent.com/img/chivda.jpg",
-                        price: 180,
-                        unit: "500gm",
-                        isNew: false
-                    },
-                    {
-                        id: 5,
-                        name: "Shev Bhaji Masala",
-                        description: "Ready-to-use spice blend for Shev Bhaji.",
-                        image: "http://googleusercontent.com/img/shev-bhaji-masala.jpg",
-                        price: 90,
-                        unit: "100gm",
-                        isNew: false
-                    },
-                    {
-                        id: 6,
-                        name: "Thalipeeth Bhajani",
-                        description: "Multigrain flour mix for traditional Thalipeeth.",
-                        image: "http://googleusercontent.com/img/thalipeeth-bhajani.jpg",
-                        price: 110,
-                        unit: "250gm",
-                        isNew: false
-                    },
-                    {
-                        id: 7,
-                        name: "Puran Poli (Seasonal)",
-                        description: "Sweet flatbread with lentil filling, available seasonally.",
-                        image: "http://googleusercontent.com/img/puran-poli.jpg",
-                        price: 35, // Per piece
-                        unit: "per piece",
-                        isNew: false
-                    },
-                    {
-                        id: 8,
-                        name: "Ambe Dal",
-                        description: "Raw mango and chana dal salad.",
-                        image: "http://googleusercontent.com/img/ambe-dal.jpg",
-                        price: 70,
-                        unit: "200gm",
-                        isNew: false
-                    },
-                ]
+                item: "Item",
+                quantity: "Qty",
+                price: "Price",
+                total: "Total",
+                remove: "Remove"
             },
             hi: {
-                brandName: "काल हिंदी - अंजलि गृह उद्योग",
-                pageTitle: "अभी ऑर्डर करें - अंजलि गृह उद्योग",
-                backToHomeBtn: "होम पर वापस जाएँ",
-                viewCartBtn: "कार्ट देखें",
-                cartTitle: "आपका कार्ट",
-                totalAmountText: "कुल:",
-                continueShoppingBtn: "खरीददारी जारी रखें",
-                proceedToCheckoutBtn: "चेकआउट के लिए आगे बढ़ें",
-                checkoutTitle: "चेकआउट विवरण",
-                fullNameLabel: "पूरा नाम:",
-                phoneLabel: "व्हाट्सएप फोन नंबर:",
-                emailLabel: "ईमेल (वैकल्पिक):",
-                addressLabel: "वितरण पता:",
-                deliveryInstructionsLabel: "वितरण निर्देश (वैकल्पिक):",
-                shippingMethodLabel: "शिपिंग विधि:",
-                standardShippingText: "मानक शिपिंग (3-5 दिन) - ₹50",
-                expressShippingText: "एक्सप्रेस शिपिंग (1-2 दिन) - ₹100",
-                paymentMethodLabel: "भुगतान विधि:",
-                codText: "कैश ऑन डिलीवरी (COD)",
-                onlinePaymentText: "यूपीआई / ऑनलाइन भुगतान",
-                backToCartBtn: "कार्ट पर वापस जाएँ",
-                confirmOrderBtn: "व्हाट्सएप पर ऑर्डर पुष्टि करें",
-                removeBtn: "हटाएँ",
-                emptyCartMessage: "आपका कार्ट खाली है।",
-                quantityLabel: "मात्रा:",
-                whatsappOrderSubject: "वेबसाइट से नया ऑर्डर",
-                thankYouMessage: "आपके ऑर्डर के लिए धन्यवाद! हम शीघ्र ही आपसे संपर्क करेंगे।",
+                mainHeading: "कालिंदी - अंजली गृह उद्योग",
+                subHeading: "60 साल की विरासत के साथ प्रामाणिक घर का बना उत्पाद",
+                filterAll: "सभी उत्पाद",
+                filterChutneys: "चटनी",
+                filterLaddus: "लड्डू",
+                filterMixes: "मसाले",
+                filterOther: "अन्य",
+                add: "जोड़ें",
+                cartTotalText: "कुल:",
+                viewCartButton: "कार्ट देखें",
+                checkoutButton: "चेकआउट करें",
+                cartModalTitle: "आपकी कार्ट",
+                clearCartButton: "कार्ट खाली करें",
+                cartModalTotalText: "कुल:",
+                checkoutModalButton: "चेकआउट करें",
+                rupeeSymbol: "₹",
+                gram: "ग्राम",
+                kilogram: "किलो",
+                cartEmpty: "आपकी कार्ट खाली है। कृपया चेकआउट करने से पहले आइटम जोड़ें।",
+                languageNotSet: "भाषा वरीयता नहीं मिली। कृपया एक भाषा का चयन करें।",
                 productNotFound: "उत्पाद नहीं मिला।",
-                products: [
-                    {
-                        id: 1,
-                        name: "कोथिंबीर वड़ी (नया)",
-                        description: "प्रामाणिक महाराष्ट्रीयन स्नैक, कुरकुरा और स्वादिष्ट।",
-                        image: "http://googleusercontent.com/img/kothambir-wadi.jpg",
-                        price: 150,
-                        unit: "250ग्राम",
-                        isNew: true
-                    },
-                    {
-                        id: 2,
-                        name: "तिल गुल लाडू",
-                        description: "पारंपरिक तिल और गुड़ का लाडू, त्योहारों के लिए एकदम सही।",
-                        image: "http://googleusercontent.com/img/tilgul-ladoo.jpg",
-                        price: 200,
-                        unit: "250ग्राम",
-                        isNew: false
-                    },
-                    {
-                        id: 3,
-                        name: "बेसन लाडू",
-                        description: "मुंह में घुल जाने वाली बेसन की मिठाई।",
-                        image: "http://googleusercontent.com/img/besan-ladoo.jpg",
-                        price: 220,
-                        unit: "250ग्राम",
-                        isNew: false
-                    },
-                    {
-                        id: 4,
-                        name: "चिवड़ा",
-                        description: "मसालेदार और कुरकुरा स्नैक मिक्स।",
-                        image: "http://googleusercontent.com/img/chivda.jpg",
-                        price: 180,
-                        unit: "500ग्राम",
-                        isNew: false
-                    },
-                    {
-                        id: 5,
-                        name: "शेव भाजी मसाला",
-                        description: "शेव भाजी के लिए तैयार मसाला मिश्रण।",
-                        image: "http://googleusercontent.com/img/shev-bhaji-masala.jpg",
-                        price: 90,
-                        unit: "100ग्राम",
-                        isNew: false
-                    },
-                    {
-                        id: 6,
-                        name: "थालीपीठ भाजिनी",
-                        description: "पारंपरिक थालीपीठ के लिए मल्टीग्रेन आटा मिश्रण।",
-                        image: "http://googleusercontent.com/img/thalipeeth-bhajani.jpg",
-                        price: 110,
-                        unit: "250ग्राम",
-                        isNew: false
-                    },
-                    {
-                        id: 7,
-                        name: "पूरण पोली (मौसमी)",
-                        description: "दाल के भरने के साथ मीठी रोटी, मौसमी रूप से उपलब्ध।",
-                        image: "http://googleusercontent.com/img/puran-poli.jpg",
-                        price: 35,
-                        unit: "प्रति पीस",
-                        isNew: false
-                    },
-                    {
-                        id: 8,
-                        name: "अम्बे दाल",
-                        description: "कच्चे आम और चना दाल का सलाद।",
-                        image: "http://googleusercontent.com/img/ambe-dal.jpg",
-                        price: 70,
-                        unit: "200ग्राम",
-                        isNew: false
-                    },
-                ]
+                item: "उत्पाद",
+                quantity: "मात्रा",
+                price: "मूल्य",
+                total: "कुल",
+                remove: "हटाएँ"
             },
             mr: {
-                brandName: "कालिंदी - अंजली गृह उद्योग",
-                pageTitle: "आता ऑर्डर करा - अंजली गृह उद्योग",
-                backToHomeBtn: "होम पेजवर परत जा",
-                viewCartBtn: "कार्ट पहा",
-                cartTitle: "तुमचा कार्ट",
-                totalAmountText: "एकूण:",
-                continueShoppingBtn: "खरेदी सुरू ठेवा",
-                proceedToCheckoutBtn: "चेकआउटसाठी पुढे जा",
-                checkoutTitle: "चेकआउट तपशील",
-                fullNameLabel: "पूर्ण नाव:",
-                phoneLabel: "व्हॉट्सॲप फोन नंबर:",
-                emailLabel: "ईमेल (पर्यायी):",
-                addressLabel: "वितरण पत्ता:",
-                deliveryInstructionsLabel: "वितरण सूचना (पर्यायी):",
-                shippingMethodLabel: "शिपिंग पद्धत:",
-                standardShippingText: "मानक शिपिंग (3-5 दिवस) - ₹50",
-                expressShippingText: "एक्सप्रेस शिपिंग (1-2 दिवस) - ₹100",
-                paymentMethodLabel: "पेमेंट पद्धत:",
-                codText: "कॅश ऑन डिलिव्हरी (COD)",
-                onlinePaymentText: "यूपीआय / ऑनलाइन पेमेंट",
-                backToCartBtn: "कार्टवर परत जा",
-                confirmOrderBtn: "व्हॉट्सॲपवर ऑर्डरची पुष्टी करा",
-                removeBtn: "काढा",
-                emptyCartMessage: "तुमचा कार्ट रिकामा आहे.",
-                quantityLabel: "प्रमाण:",
-                whatsappOrderSubject: "वेबसाइटवरून नवीन ऑर्डर",
-                thankYouMessage: "आपल्या ऑर्डरबद्दल धन्यवाद! आम्ही लवकरच आपल्याशी संपर्क साधू.",
+                mainHeading: "कालंदी - अंजली गृह उद्योग",
+                subHeading: "60 वर्षांच्या वारशासह अस्सल घरगुती उत्पादने",
+                filterAll: "सर्व उत्पादने",
+                filterChutneys: "चटण्या",
+                filterLaddus: "लाडू",
+                filterMixes: "मसाले",
+                filterOther: "इतर",
+                add: "जोडा",
+                cartTotalText: "एकूण:",
+                viewCartButton: "कार्ट पहा",
+                checkoutButton: "चेकआउट करा",
+                cartModalTitle: "तुमची कार्ट",
+                clearCartButton: "कार्ट साफ करा",
+                cartModalTotalText: "एकूण:",
+                checkoutModalButton: "चेकआउट करा",
+                rupeeSymbol: "₹",
+                gram: "ग्रॅम",
+                kilogram: "किलो",
+                cartEmpty: "तुमची कार्ट रिकामी आहे. कृपया चेकआउट करण्यापूर्वी वस्तू जोडा.",
+                languageNotSet: "भाषा प्राधान्य सापडले नाही. कृपया एक भाषा निवडा.",
                 productNotFound: "उत्पादन सापडले नाही.",
-                products: [
-                    {
-                        id: 1,
-                        name: "कोथिंबीर वडी (नवीन)",
-                        description: "पारंपारिक महाराष्ट्रीयन स्नॅक, कुरकुरीत आणि स्वादिष्ट.",
-                        image: "http://googleusercontent.com/img/kothambir-wadi.jpg",
-                        price: 150,
-                        unit: "250ग्रॅम",
-                        isNew: true
-                    },
-                    {
-                        id: 2,
-                        name: "तिळगुळ लाडू",
-                        description: "पारंपारिक तीळ आणि गुळाचा लाडू, सणांसाठी योग्य.",
-                        image: "http://googleusercontent.com/img/tilgul-ladoo.jpg",
-                        price: 200,
-                        unit: "250ग्रॅम",
-                        isNew: false
-                    },
-                    {
-                        id: 3,
-                        name: "बेसन लाडू",
-                        description: "तोंडात विरघळणारी बेसनाची मिठाई.",
-                        image: "http://googleusercontent.com/img/besan-ladoo.jpg",
-                        price: 220,
-                        unit: "250ग्रॅम",
-                        isNew: false
-                    },
-                    {
-                        id: 4,
-                        name: "चिवडा",
-                        description: "मसालेदार आणि कुरकुरीत स्नॅक मिक्स.",
-                        image: "http://googleusercontent.com/img/chivda.jpg",
-                        price: 180,
-                        unit: "500ग्रॅम",
-                        isNew: false
-                    },
-                    {
-                        id: 5,
-                        name: "शेव भाजी मसाला",
-                        description: "शेव भाजीसाठी तयार मसाला मिश्रण.",
-                        image: "http://googleusercontent.com/img/shev-bhaji-masala.jpg",
-                        price: 90,
-                        unit: "100ग्रॅम",
-                        isNew: false
-                    },
-                    {
-                        id: 6,
-                        name: "थालीपीठ भाजिनी",
-                        description: "पारंपारिक थालीपीठासाठी मल्टीग्रेन पिठाचे मिश्रण.",
-                        image: "http://googleusercontent.com/img/thalipeeth-bhajani.jpg",
-                        price: 110,
-                        unit: "250ग्रॅम",
-                        isNew: false
-                    },
-                    {
-                        id: 7,
-                        name: "पूरण पोळी (हंगामी)",
-                        description: "डाळीच्या सारणाने भरलेली गोड पोळी, हंगामानुसार उपलब्ध.",
-                        image: "http://googleusercontent.com/img/puran-poli.jpg",
-                        price: 35,
-                        unit: "प्रति पीस",
-                        isNew: false
-                    },
-                    {
-                        id: 8,
-                        name: "आंबे डाळ",
-                        description: "कच्च्या कैरी आणि चणा डाळीचे सॅलड.",
-                        image: "http://googleusercontent.com/img/ambe-dal.jpg",
-                        price: 70,
-                        unit: "200ग्रॅम",
-                        isNew: false
-                    },
-                ]
+                item: "उत्पादन",
+                quantity: "प्रमाण",
+                price: "किंमत",
+                total: "एकूण",
+                remove: "काढा"
             }
         };
 
-        function updateContent(lang) {
-            translations = allTranslations[lang];
+        // Product data (simplified for brevity, assume full data from your previous files)
+        const productsData = [
+            { id: 'prod01', name: "Peanut Chutney (Garlic)", marathi: "शेंगदाणा चटणी (लसूण)", hindi: "मूंगफली की चटनी (लहसुन)", description: "A spicy and flavorful chutney made from roasted peanuts and garlic.", marathiDesc: "भाजलेल्या शेंगदाणे आणि लसूणपासून बनवलेली मसालेदार आणि चवदार चटणी.", hindiDesc: "भुनी हुई मूंगफली और लहसुन से बनी एक मसालेदार और स्वादिष्ट चटनी।", category: "chutneys", sizes: [{ size: '250gm', price: 150 }] },
+            { id: 'prod02', name: "Peanut Chutney (Fasting)", marathi: "शेंगदाणा चटणी (उपवास)", hindi: "मूंगफली की चटनी (उपवास)", description: "A special peanut chutney prepared for fasting, without garlic and onion.", marathiDesc: "उपवासासाठी तयार केलेली विशेष शेंगदाणा चटणी, लसूण आणि कांदाविना.", hindiDesc: "व्रत के लिए तैयार की गई एक विशेष मूंगफली की चटनी, बिना लहसुन और प्याज के।", category: "chutneys", sizes: [{ size: '250gm', price: 150 }] },
+            { id: 'prod03', name: "Flaxseed Chutney (Garlic)", marathi: "जवस चटणी (लसूण)", hindi: "अलसी की चटनी (लहसुन)", description: "Healthy flaxseed chutney with a hint of garlic for a distinct flavor.", marathiDesc: "लसूणच्या चवीसह निरोगी जवस चटणी.", hindiDesc: "लहसुन के स्वाद के साथ स्वस्थ अलसी की चटनी।", category: "chutneys", sizes: [{ size: '200gm', price: 180 }] },
+            { id: 'prod04', name: "Niger Seed Chutney (Garlic)", marathi: "कारळा चटणी (लसूण)", hindi: "करला चटनी (लहसुन)", description: "Unique chutney made from niger seeds and garlic, full of flavor.", marathiDesc: "कारळा बिया आणि लसूणपासून बनवलेली अनोखी चटणी, चवदार आणि आरोग्यदायी.", hindiDesc: "नाइजर बीज और लहसुन से बनी अनोखी चटनी, स्वाद से भरपूर।", category: "chutneys", sizes: [{ size: '200gm', price: 200 }] },
+            { id: 'prod05', name: "Coconut Chutney (Garlic)", marathi: "खोबरं चटणी (लसूण)", hindi: "नारियल की चटनी (लहसुन)", description: "A delightful chutney made with fresh coconut and garlic.", marathiDesc: "ताज्या नारळापासून आणि लसूणपासून बनवलेली स्वादिष्ट चटणी.", hindiDesc: "ताजे नारियल और लहसुन से बनी एक स्वादिष्ट चटनी।", category: "chutneys", sizes: [{ size: '250gm', price: 170 }] },
+            { id: 'prod06', name: "Pud Chutney", marathi: "पुड चटणी", hindi: "पुड चटनी", description: "A versatile dry chutney powder, perfect accompaniment for meals.", marathiDesc: "जेवणासोबत एक उत्तम पूरक म्हणून वापरली जाणारी बहुउपयोगी सुकी चटणी पावडर.", hindiDesc: "भोजन के साथ एक बेहतरीन पूरक के रूप में इस्तेमाल होने वाली बहुमुखी सूखी चटनी पाउडर।", category: "chutneys", sizes: [{ size: '200gm', price: 160 }] },
+            { id: 'prod07', name: "Sesame Chutney", marathi: "तीळ चटणी", hindi: "तिल की चटनी", description: "Rich and nutty chutney made from roasted sesame seeds.", marathiDesc: "भाजलेल्या तिळापासून बनवलेली चवदार आणि पौष्टिक चटणी.", hindiDesc: "भुनी हुई तिल से बनी एक समृद्ध आणि पौष्टिक चटणी।", category: "chutneys", sizes: [{ size: '200gm', price: 190 }] },
+            { id: 'prod08', name: "Digestive Areca Nut", marathi: "पाचक सुपारी", hindi: "पाचक सुपारी", description: "Traditional digestive aid made from areca nuts and spices.", marathiDesc: "सुपारी आणि मसाल्यांपासून बनवलेले पारंपरिक पाचक.", hindiDesc: "सुपारी और मसालों से बना पारंपरिक पाचक।", category: "other", sizes: [{ size: '100gm', price: 120 }] },
+            { id: 'prod09', name: "Metkut (Spice Powder Mix)", marathi: "मेथकुट", hindi: "मेथकुट", description: "A traditional Maharashtrian spice powder, ideal with rice and ghee.", marathiDesc: "भात आणि तुपासोबत आदर्श असलेले पारंपरिक महाराष्ट्रीयन मसाला पावडर.", hindiDesc: "चावल और घी के साथ आदर्श एक पारंपरिक महाराष्ट्रीयन मसाला पाउडर।", category: "mixes", sizes: [{ size: '250gm', price: 220 }] },
+            { id: 'prod10', name: "Dink Laddu (Nutmeg & Cardamom)", marathi: "डिंक लाडू (जायफळ वेलदोची)", hindi: "गोंद के लड्डू (जायफल और इलायची)", description: "Nutritious laddus made with edible gum, nuts, and aromatic spices.", marathiDesc: "खाद्य डिंक, नट्स आणि सुगंधी मसाल्यांपासून बनवलेले पौष्टिक लाडू.", hindiDesc: "खाने वाले गोंद, नट्स और सुगंधित मसालों से बने पौष्टिक लड्डू।", category: "laddus", sizes: [{ size: '500gm', price: 350 }, { size: '1Kg', price: 650 }] },
+            { id: 'prod11', name: "Peanut Laddu (Cardamom)", marathi: "शेंगदाणा लाडू (वेलदोची)", hindi: "मूंगफली के लड्डू (इलायची)", description: "Sweet laddus made from roasted peanuts and cardamom, a healthy treat.", marathiDesc: "भाजलेल्या शेंगदाणे आणि वेलदोचीपासून बनवलेले गोड लाडू, एक आरोग्यदायी पदार्थ.", hindiDesc: "भुनी हुई मूंगफली और इलायची से बने मीठे लड्डू, एक स्वस्थ व्यंजन।", category: "laddus", sizes: [{ size: '500gm', price: 300 }, { size: '1Kg', price: 550 }] },
+            { id: 'prod12', name: "Besan Laddu (Cardamom)", marathi: "बेसन लाडू (वेलदोची)", hindi: "बेसन के लड्डू (इलायची)", description: "Classic Indian sweet made from gram flour, ghee, and cardamom.", marathiDesc: "बेसन, तूप आणि वेलदोचीपासून बनवलेले उत्कृष्ट भारतीय गोड.", hindiDesc: "बेसन, घी और इलायची से बनी क्लासिक भारतीय मिठाई।", category: "laddus", sizes: [{ size: '500gm', price: 320 }, { size: '1Kg', price: 600 }] },
+            { id: 'prod13', name: "Thalipeeth Bhajani (Mixed Grains Flour)", marathi: "थालीपीठ भाजणी (मिक्स धान्य)", hindi: "थालीपीठ भाजनी (मिश्रित अनाज का आटा)", description: "A nutritious flour mix for making traditional Maharashtrian Thalipeeth.", marathiDesc: "पारंपरिक महाराष्ट्रीयन थालीपीठ बनवण्यासाठी पौष्टिक पिठाचे मिश्रण.", hindiDesc: "पारंपरिक महाराष्ट्रीयन थालीपीठ बनाने के लिए एक पौष्टिक आटा मिश्रण।", category: "mixes", sizes: [{ size: '5Kg', price: 700 }] },
+            { id: 'prod14', name: "Chakali Bhajani", marathi: "चकली भाजणी", hindi: "चकली भाजani", description: "Special flour mix for preparing crispy and delicious Chakali.", marathiDesc: "कुरकुरीत आणि स्वादिष्ट चकली तयार करण्यासाठी खास पिठाचे मिश्रण.", hindiDesc: "क्रिस्पी और स्वादिष्ट चकली बनाने के लिए विशेष आटा मिश्रण।", category: "mixes", sizes: [{ size: '5Kg', price: 800 }] }
+        ];
 
-            document.getElementById('brandName').textContent = translations.brandName;
-            document.getElementById('pageTitle').textContent = translations.pageTitle;
-            document.getElementById('backToHomeBtn').textContent = translations.backToHomeBtn;
-            document.getElementById('viewCartBtn').textContent = translations.viewCartBtn;
-            document.getElementById('cartTitle').textContent = translations.cartTitle;
-            document.getElementById('totalAmountText').textContent = translations.totalAmountText;
-            document.getElementById('continueShoppingBtn').textContent = translations.continueShoppingBtn;
-            document.getElementById('proceedToCheckoutBtn').textContent = translations.proceedToCheckoutBtn;
-            document.getElementById('checkoutTitle').textContent = translations.checkoutTitle;
-            document.getElementById('fullNameLabel').textContent = translations.fullNameLabel;
-            document.getElementById('phoneLabel').textContent = translations.phoneLabel;
-            document.getElementById('emailLabel').textContent = translations.emailLabel;
-            document.getElementById('addressLabel').textContent = translations.addressLabel;
-            document.getElementById('deliveryInstructionsLabel').textContent = translations.deliveryInstructionsLabel;
-            document.getElementById('shippingMethodLabel').textContent = translations.shippingMethodLabel;
-            document.getElementById('standardShippingText').textContent = translations.standardShippingText;
-            document.getElementById('expressShippingText').textContent = translations.expressShippingText;
-            document.getElementById('paymentMethodLabel').textContent = translations.paymentMethodLabel;
-            document.getElementById('codText').textContent = translations.codText;
-            document.getElementById('onlinePaymentText').textContent = translations.onlinePaymentText;
-            document.getElementById('backToCartBtn').textContent = translations.backToCartBtn;
-            document.getElementById('confirmOrderBtn').textContent = translations.confirmOrderBtn;
-            // Update product list and cart display after language change
-            displayProducts();
-            updateCartDisplay();
+
+        let cart = [];
+        let currentLang = 'en';
+        let currentFilter = 'all';
+
+        // Function to get the correct image filename based on product ID
+        function getProductImageFilename(productId) {
+            switch (productId) {
+                case 'prod04':
+                case 'prod05':
+                case 'prod06':
+                case 'prod07':
+                case 'prod08':
+                    return 'prod4.jpg'; // Use prod4.jpg for prod04 through prod08
+                case 'prod12':
+                    return 'prod11.jpg'; // Use prod11.jpg for prod12
+                case 'prod01':
+                    return 'prod1.jpg';
+                case 'prod02':
+                    return 'prod2.jpg';
+                case 'prod03':
+                    return 'prod3.jpg';
+                case 'prod09':
+                    return 'prod9.jpg';
+                case 'prod10':
+                    return 'prod10.jpg';
+                case 'prod11':
+                    return 'prod11.jpg';
+                case 'prod13':
+                    return 'prod13.jpg';
+                case 'prod14':
+                    return 'prod14.jpg';
+                default:
+                    return 'placeholder.jpg'; // A default or placeholder image if no match
+            }
         }
 
 
-        function displayProducts() {
-            const productListDiv = document.getElementById('productListSection');
-            productListDiv.innerHTML = ''; // Clear existing products
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('kalindiLang');
+            if (savedLang) {
+                currentLang = savedLang;
+            } else {
+                showLanguageModal(); // Prompt user to select language if not set
+                return; // Stop further execution until language is selected
+            }
+            applyTranslations(currentLang);
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            loadCartFromLocalStorage();
+            populateProductCards();
+            updateCartDisplay();
+        });
 
-            translations.products.forEach(product => {
+        function applyTranslations(lang) {
+            const t = translations[lang];
+            document.getElementById('pageTitle').textContent = t.mainHeading + ": " + t.filterAll;
+            document.getElementById('mainHeading').textContent = t.mainHeading;
+            document.getElementById('subHeading').textContent = t.subHeading;
+            document.getElementById('filterAll').textContent = t.filterAll;
+            document.getElementById('filterChutneys').textContent = t.filterChutneys;
+            document.getElementById('filterLaddus').textContent = t.filterLaddus;
+            document.getElementById('filterMixes').textContent = t.filterMixes;
+            document.getElementById('filterOther').textContent = t.filterOther;
+            document.getElementById('cartTotalText').innerHTML = `${t.cartTotalText} ${t.rupeeSymbol}<span id="cartTotalPrice">0</span>`;
+            document.getElementById('viewCartButton').innerHTML = `${t.viewCartButton} (<span id="cartItemCount">0</span>)`;
+            document.getElementById('checkoutButton').textContent = t.checkoutButton;
+            document.getElementById('cartModalTitle').textContent = t.cartModalTitle;
+            document.getElementById('clearCartButton').textContent = t.clearCartButton;
+            document.getElementById('cartModalTotalText').innerHTML = `${t.cartModalTotalText} ${t.rupeeSymbol}<span id="cartModalTotalPrice">0</span>`;
+            document.getElementById('checkoutModalButton').textContent = t.checkoutModalButton;
+            populateProductCards(); // Re-render product cards with new language
+            updateCartDisplay(); // Update cart modal display
+        }
+
+        function getProductNameForDisplay(product) {
+            if (currentLang === 'hi') {
+                return product.hindi || product.name;
+            } else if (currentLang === 'mr') {
+                return product.marathi || product.name;
+            } else {
+                return product.name;
+            }
+        }
+
+        function getProductDescriptionForDisplay(product) {
+            if (currentLang === 'hi') {
+                return product.hindiDesc || product.description;
+            } else if (currentLang === 'mr') {
+                return product.marathiDesc || product.description;
+            } else {
+                return product.description;
+            }
+        }
+
+        function filterProducts(category) {
+            currentFilter = category;
+            populateProductCards();
+            // Update active state of filter buttons (optional, but good UX)
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-heritage-600', 'text-white');
+                btn.classList.add('bg-heritage-100', 'text-heritage-700');
+            });
+            document.getElementById(`filter${category.charAt(0).toUpperCase() + category.slice(1)}`).classList.remove('bg-heritage-100', 'text-heritage-700');
+            document.getElementById(`filter${category.charAt(0).toUpperCase() + category.slice(1)}`).classList.add('bg-heritage-600', 'text-white');
+        }
+
+        function populateProductCards() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = ''; // Clear existing cards
+
+            const filteredProducts = currentFilter === 'all' ? productsData : productsData.filter(p => p.category === currentFilter);
+
+            filteredProducts.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'bg-white rounded-lg shadow-md overflow-hidden animate-slideInUp relative';
+                productCard.className = 'bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center border border-heritage-200';
+                
+                // Determine the correct image filename
+                const imageFilename = getProductImageFilename(product.id);
+                // Assume images are in an 'images' folder at the root of your website
+                const imagePath = `images/${imageFilename}`; 
+
                 productCard.innerHTML = `
-                    ${product.isNew ? '<span class="absolute top-2 right-2 bg-heritage-500 text-white text-xs font-bold px-2 py-1 rounded-full">New</span>' : ''}
-                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <h3 class="text-xl font-bold text-gray-800">${product.name}</h3>
-                        <p class="text-gray-600 text-sm mt-1">${product.description}</p>
-                        <p class="text-heritage-600 font-bold text-lg mt-3">₹${product.price} / ${product.unit}</p>
-                        <button onclick="addToCart(${product.id})" class="mt-4 bg-heritage-600 hover:bg-heritage-700 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300 ease-in-out">Add to Cart</button>
+                    <img src="${imagePath}" alt="${getProductNameForDisplay(product)}" class="w-full h-32 object-cover mb-4 rounded-md">
+                    <h3 class="text-lg font-semibold text-heritage-800 mb-2" id="productName-${product.id}">${getProductNameForDisplay(product)}</h3>
+                    <p class="text-sm text-gray-600 mb-4" id="productDescription-${product.id}">${getProductDescriptionForDisplay(product)}</p>
+                    <div class="flex flex-col w-full">
+                        ${product.sizes.map(size => `
+                            <div class="flex items-center justify-between w-full mb-2">
+                                <span class="text-md font-medium text-gray-700">${size.size.replace('gm', translations[currentLang].gram).replace('Kg', translations[currentLang].kilogram)} - ${translations[currentLang].rupeeSymbol}${size.price}</span>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="changeQuantity('${product.id}', '${size.size}', -1)" class="w-8 h-8 bg-heritage-200 text-heritage-800 rounded-full flex items-center justify-center hover:bg-heritage-300 transition duration-150">-</button>
+                                    <input type="number" id="quantity-${product.id}-${size.size}" value="${getQuantityInCart(product.id, size.size)}" min="0" class="w-16 text-center border border-gray-300 rounded-md py-1" onchange="updateQuantityFromInput('${product.id}', '${size.size}', this.value)">
+                                    <button onclick="changeQuantity('${product.id}', '${size.size}', 1)" class="w-8 h-8 bg-heritage-200 text-heritage-800 rounded-full flex items-center justify-center hover:bg-heritage-300 transition duration-150">+</button>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 `;
-                productListDiv.appendChild(productCard);
+                productsGrid.appendChild(productCard);
             });
         }
 
-        function addToCart(productId) {
-            const product = translations.products.find(p => p.id === productId);
-            if (product) {
-                const existingItem = cart.find(item => item.id === productId);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ ...product, quantity: 1 });
+        function getQuantityInCart(productId, size) {
+            const item = cart.find(item => item.id === productId && item.size === size);
+            return item ? item.quantity : 0;
+        }
+
+        function updateQuantityFromInput(productId, size, value) {
+            const newQuantity = parseInt(value);
+            if (isNaN(newQuantity) || newQuantity < 0) {
+                document.getElementById(`quantity-${productId}-${size}`).value = getQuantityInCart(productId, size);
+                return;
+            }
+            const currentItem = cart.find(item => item.id === productId && item.size === size);
+            const currentQuantity = currentItem ? currentItem.quantity : 0;
+            const difference = newQuantity - currentQuantity;
+            changeQuantity(productId, size, difference, true); // Use true to indicate direct input update
+        }
+
+        function changeQuantity(productId, size, delta, isInputUpdate = false) {
+            const product = productsData.find(p => p.id === productId);
+            if (!product) {
+                console.error(translations[currentLang].productNotFound);
+                return;
+            }
+
+            const sizeOption = product.sizes.find(s => s.size === size);
+            if (!sizeOption) {
+                console.error(`Size option ${size} not found for product ${productId}`);
+                return;
+            }
+
+            const existingItemIndex = cart.findIndex(item => item.id === productId && item.size === size);
+
+            if (existingItemIndex > -1) {
+                // Update existing item
+                cart[existingItemIndex].quantity += delta;
+                if (cart[existingItemIndex].quantity <= 0) {
+                    cart.splice(existingItemIndex, 1); // Remove if quantity is 0 or less
                 }
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCartDisplay();
-            } else {
-                alert(translations[currentLanguage].productNotFound);
+            } else if (delta > 0) {
+                // Add new item if quantity is positive
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    marathi: product.marathi,
+                    hindi: product.hindi,
+                    size: size,
+                    price: sizeOption.price,
+                    quantity: delta
+                });
+            }
+
+            saveCartToLocalStorage();
+            updateCartDisplay();
+            // Update the quantity input on the product card
+            if (!isInputUpdate) { // Only update if not already from input
+                const quantityInput = document.getElementById(`quantity-${productId}-${size}`);
+                if (quantityInput) {
+                    quantityInput.value = getQuantityInCart(productId, size);
+                }
+            }
+        }
+
+        function saveCartToLocalStorage() {
+            localStorage.setItem('kalindiCart', JSON.stringify(cart));
+        }
+
+        function loadCartFromLocalStorage() {
+            const savedCart = localStorage.getItem('kalindiCart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
             }
         }
 
         function updateCartDisplay() {
-            const cartItemsDiv = document.getElementById('cartItems');
-            cartItemsDiv.innerHTML = '';
-            let totalAmount = 0;
+            const cartItemsContainer = document.getElementById('cartItems');
+            const cartTotalPriceSpan = document.getElementById('cartTotalPrice');
+            const cartModalTotalPriceSpan = document.getElementById('cartModalTotalPrice');
+            const cartItemCountSpan = document.getElementById('cartItemCount');
+
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let totalItemCount = 0;
 
             if (cart.length === 0) {
-                cartItemsDiv.innerHTML = `<p class="text-center text-gray-600">${translations[currentLanguage].emptyCartMessage}</p>`;
+                cartItemsContainer.innerHTML = `<p class="text-center text-gray-500">${translations[currentLang].cartEmpty}</p>`;
             } else {
-                cart.forEach(item => {
+                cart.forEach((item, index) => {
+                    const product = productsData.find(p => p.id === item.id);
+                    const displayProductName = product ? getProductNameForDisplay(product) : item.name;
+                    const unit = item.size.endsWith('gm') ? translations[currentLang].gram : translations[currentLang].kilogram;
+
                     const itemTotal = item.price * item.quantity;
-                    totalAmount += itemTotal;
+                    total += itemTotal;
+                    totalItemCount += item.quantity;
 
                     const cartItemDiv = document.createElement('div');
-                    cartItemDiv.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg shadow-sm';
+                    cartItemDiv.className = 'flex justify-between items-center py-2 border-b border-heritage-100';
                     cartItemDiv.innerHTML = `
-                        <div class="flex items-center space-x-4">
-                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
-                            <div>
-                                <h4 class="font-bold text-gray-800">${item.name}</h4>
-                                <p class="text-sm text-gray-600">${translations[currentLanguage].quantityLabel} ${item.quantity} x ₹${item.price}</p>
-                            </div>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-800">${displayProductName} (${item.size.replace('gm', unit).replace('Kg', translations[currentLang].kilogram)})</p>
+                            <p class="text-sm text-gray-600">${translations[currentLang].quantity}: ${item.quantity} x ${translations[currentLang].rupeeSymbol}${item.price}</p>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <p class="font-bold text-heritage-600">₹${itemTotal}</p>
-                            <button onclick="removeFromCart(${item.id})" class="text-red-500 hover:text-red-700 text-sm font-semibold" title="${translations[currentLanguage].removeBtn}">${translations[currentLanguage].removeBtn}</button>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-heritage-700">${translations[currentLang].rupeeSymbol}${itemTotal}</span>
+                            <button onclick="removeFromCart('${item.id}', '${item.size}')" class="ml-4 p-1 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition duration-150">
+                                <i class="fas fa-trash-alt text-xs"></i>
+                            </button>
                         </div>
                     `;
-                    cartItemsDiv.appendChild(cartItemDiv);
+                    cartItemsContainer.appendChild(cartItemDiv);
                 });
             }
 
-            document.getElementById('totalAmount').textContent = totalAmount;
-            document.getElementById('cartItemCount').textContent = cart.length; // Update count in header
+            cartTotalPriceSpan.textContent = total.toFixed(0);
+            cartModalTotalPriceSpan.textContent = total.toFixed(0);
+            cartItemCountSpan.textContent = totalItemCount;
         }
 
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            localStorage.setItem('cart', JSON.stringify(cart));
+        function removeFromCart(productId, size) {
+            const itemIndex = cart.findIndex(item => item.id === productId && item.size === size);
+            if (itemIndex > -1) {
+                cart.splice(itemIndex, 1);
+            }
+            resetQuantityInput(productId, size); // Reset quantity on product card
+            saveCartToLocalStorage();
             updateCartDisplay();
+            populateProductCards(); // Refresh cards to reflect quantity change if modal is closed
         }
 
-        function showCart() {
-            document.getElementById('productListSection').classList.add('hidden');
-            document.getElementById('checkoutSection').classList.add('hidden');
-            document.getElementById('cartSection').classList.remove('hidden');
-            updateCartDisplay(); // Ensure cart is updated when shown
+        function resetQuantityInput(productId, size) {
+            const quantityInput = document.getElementById(`quantity-${productId}-${size}`);
+            if (quantityInput) {
+                quantityInput.value = 0;
+            }
+            const addBtn = document.getElementById(`addBtn-${productId}`);
+            if (addBtn) addBtn.textContent = translations[currentLang].add;
         }
 
-        function showCheckout() {
+        function clearCart() {
+            cart = [];
+            localStorage.removeItem('kalindiCart');
+            updateCartDisplay();
+            populateProductCards(); // Reset all product quantities on cards
+        }
+
+        function showCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.add('active');
+        }
+
+        function hideCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.remove('active');
+        }
+
+        function proceedToCheckout() {
             if (cart.length === 0) {
-                alert(translations[currentLanguage].emptyCartMessage);
+                alert(translations[currentLang].cartEmpty);
                 return;
             }
-            document.getElementById('productListSection').classList.add('hidden');
-            document.getElementById('cartSection').classList.add('hidden');
-            document.getElementById('checkoutSection').classList.remove('hidden');
+            // Store cart data in session storage to be accessed by userdetails.html
+            sessionStorage.setItem('currentOrderCart', JSON.stringify(cart));
+            // Store total price in session storage
+            const cartTotalPrice = document.getElementById('cartTotalPrice').textContent;
+            sessionStorage.setItem('currentOrderTotal', cartTotalPrice);
+
+            // Redirect to user details page
+            window.location.href = 'userdetails.html';
         }
 
-        function cancelCheckout() {
-            document.getElementById('checkoutSection').classList.add('hidden');
-            document.getElementById('cartSection').classList.add('hidden'); // Ensure cart is also hidden if coming from checkout
-            document.getElementById('productListSection').classList.remove('hidden');
-        }
-
-        document.getElementById('checkoutForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            confirmOrder();
-        });
-
-        function confirmOrder() {
-            const fullName = document.getElementById('fullName').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const address = document.getElementById('address').value;
-            const deliveryInstructions = document.getElementById('deliveryInstructions').value;
-            const shippingMethod = document.querySelector('input[name="shipping"]:checked').value;
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-            const totalOrderAmount = document.getElementById('totalAmount').textContent; // Get the total amount
-
-            const whatsappNumber = '919604002702'; // Kalindi's WhatsApp number
-
-            let orderDetails = `${translations[currentLanguage].whatsappOrderSubject}\\n\\n`;
-            orderDetails += `${translations[currentLanguage].fullNameLabel} ${fullName}\\n`;
-            orderDetails += `${translations[currentLanguage].phoneLabel} ${phone}\\n`;
-            if (email) orderDetails += `${translations[currentLanguage].emailLabel} ${email}\\n`;
-            orderDetails += `${translations[currentLanguage].addressLabel} ${address}\\n`;
-            if (deliveryInstructions) orderDetails += `${translations[currentLanguage].deliveryInstructionsLabel} ${deliveryInstructions}\\n`;
-            orderDetails += `${translations[currentLanguage].shippingMethodLabel} ${shippingMethod}\\n\\n`;
-            orderDetails += `${translations[currentLanguage].cartTitle}:\\n`;
-
-            cart.forEach(item => {
-                orderDetails += `- ${item.name} (${item.unit}) x ${item.quantity} = ₹${item.price * item.quantity}\\n`;
-            });
-
-            orderDetails += `\\n${translations[currentLanguage].totalAmountText} ₹${totalOrderAmount}\\n`;
-            orderDetails += `${translations[currentLanguage].paymentMethodText} ${paymentMethod}\\n`;
-
-            // Encode message for URL
-            const encodedMessage = encodeURIComponent(orderDetails);
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-
-            // Redirect to WhatsApp
-            window.open(whatsappUrl, '_blank');
-
-            // Clear cart and show success message (optional, as user is redirected)
-            alert(translations[currentLanguage].thankYouMessage);
-            cart = [];
-            localStorage.removeItem('cart');
-            updateCartDisplay();
-            cancelCheckout(); // Go back to product list view
-        }
-
-
-        // On page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Get language from localStorage (set by home page)
-            currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
-            updateContent(currentLanguage);
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // Listen for language changes
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'selectedLanguage') {
-                    currentLanguage = e.newValue || 'en';
-                    updateContent(currentLanguage);
-                }
-            });
-        });
     </script>
 </body>
 </html>
